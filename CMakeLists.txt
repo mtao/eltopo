@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 2.8.9)
 PROJECT(eltopo)
 
+
+if (NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type selected, default to Release")
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -Wextra -Wno-reorder -Wno-unknown-pragmas -march=native" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
+
 OPTION(GUI_ENABLED "USE GUI" OFF)
 
 # Common
@@ -48,13 +58,25 @@ ADD_DEFINITIONS(-DNO_GUI)
 SET(OPENGL_LIBRARIES )
 SET(GLUT_LIBRARY )
 ENDIF(GUI_ENABLED)
-ADD_DEFINITIONS(-D__LITTLE_ENDIAN__ -DUSE_FORTRAN_BLAS)
 
-INCLUDE_DIRECTORIES(eltopo3d common common/newsparse common/meshes common/tunicate)
+INCLUDE_DIRECTORIES(eltopo3d 
+    ${CMAKE_CURRENT_SOURCE_DIR}/common 
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/newsparse 
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/meshes 
+    ${CMAKE_CURRENT_SOURCE_DIR}/common/tunicate)
 
 FIND_PACKAGE(BLAS REQUIRED)
 FIND_PACKAGE(LAPACK REQUIRED)
 
+include_directories(${BLAS_INCLUDE_DIR})
+include_directories(${LAPACK_INCLUDE_DIR})
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  add_definitions(-DUSE_FORTRAN_BLAS)
+  add_definitions(-D__LITTLE_ENDIAN__)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flax-vector-conversions")
+endif()
 
 
 ADD_LIBRARY(eltopo_common STATIC ${ELTOPO_COMMON_SRC})
@@ -62,7 +84,17 @@ ADD_LIBRARY(eltopo STATIC ${ELTOPO_SRC})
 TARGET_LINK_LIBRARIES(eltopo eltopo_common ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 
 
+if(CMAKE_BUILD_TYPE MATCHES Release)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funroll-loops")
+  set(LIBNAME "eltopo_release")
+else()
+  set(LIBNAME "eltopo_debug")
+endif()
 
+# We need C++11. Put this directive after CGAL's include.
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+endif()
 
 
 
@@ -83,5 +115,5 @@ SET(TALPA_SRC
 
 ADD_EXECUTABLE(talpa ${TALPA_SRC})
 TARGET_INCLUDE_DIRECTORIES(talpa PUBLIC talpa talpa/drivers talpa/curlnoise)
-TARGET_LINK_LIBRARIES(talpa eltopo ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+TARGET_LINK_LIBRARIES(talpa eltopo)
 
