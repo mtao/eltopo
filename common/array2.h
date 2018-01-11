@@ -25,7 +25,7 @@ struct Array2
 
    // the actual representation
 
-   ptrdiff_t ni, nj;
+   std::ptrdiff_t ni, nj;
    ArrayT a;
 
    // the interface
@@ -82,13 +82,13 @@ struct Array2
 //      return a[i+ni*j];
 //   }
 
-   const T& operator()(ptrdiff_t i, ptrdiff_t j) const
+   const T& operator()(std::ptrdiff_t i, std::ptrdiff_t j) const
    {
       assert(i>=0 && i<ni && j>=0 && j<nj);
       return a[i+ni*j];
    }
    
-   T& operator()(ptrdiff_t i, ptrdiff_t j)
+   T& operator()(std::ptrdiff_t i, std::ptrdiff_t j)
    {
       assert(i>=0 && i<ni && j>=0 && j<nj);
       return a[i+ni*j];
@@ -230,7 +230,7 @@ struct Array2
    void reserve(int reserve_ni, int reserve_nj)
    { a.reserve(reserve_ni*reserve_nj); }
 
-   void resize(ptrdiff_t ni_, ptrdiff_t nj_)
+   void resize(std::ptrdiff_t ni_, std::ptrdiff_t nj_)
    {
       assert(ni_>=0 && nj_>=0);
       a.resize(ni_*nj_);
