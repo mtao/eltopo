@@ -8,14 +8,14 @@
 // ---------------------------------------------------------
 
 
-#include <meshmerger.h>
+#include "meshmerger.h"
 
-#include <broadphase.h>
-#include <collisionpipeline.h>
-#include <collisionqueries.h>
+#include "broadphase.h"
+#include "collisionpipeline.h"
+#include "../common/collisionqueries.h"
 #include <queue>
-#include <runstats.h>
-#include <surftrack.h>
+#include "../common/runstats.h"
+#include "surftrack.h"
 
 
 // --------------------------------------------------------

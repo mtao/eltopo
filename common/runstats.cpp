@@ -6,9 +6,9 @@
  *
  */
 
-#include <runstats.h>
+#include "runstats.h"
 
-#include <commonoptions.h>
+#include "commonoptions.h"
 #include <fstream>
 
 // ------------------------------------------------------------------

@@ -7,15 +7,15 @@
 //
 // ---------------------------------------------------------
 
-#include <edgesplitter.h>
+#include "edgesplitter.h"
 
-#include <broadphase.h>
-#include <ccd_wrapper.h>
-#include <collisionqueries.h>
-#include <runstats.h>
-#include <subdivisionscheme.h>
-#include <surftrack.h>
-#include <trianglequality.h>
+#include "broadphase.h"
+#include "../common/ccd_wrapper.h"
+#include "../common/collisionqueries.h"
+#include "../common/runstats.h"
+#include "subdivisionscheme.h"
+#include "surftrack.h"
+#include "trianglequality.h"
 
 
 

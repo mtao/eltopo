@@ -2,7 +2,7 @@
 #define ARRAY2_H
 
 #include <algorithm>
-#include <array1.h>
+#include "array1.h"
 #include <cassert>
 #include <vector>
 

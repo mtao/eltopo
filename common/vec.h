@@ -3,9 +3,9 @@
 
 #include <cassert>
 #include <cmath>
-#include <hashtable.h>
+#include "hashtable.h"
 #include <iostream>
-#include <util.h>
+#include "util.h"
 
 // Defines a thin wrapper around fixed size C-style arrays, using template parameters,
 // which is useful for dealing with vectors of different dimensions.

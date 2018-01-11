@@ -1,12 +1,12 @@
 // Released into the public domain by Robert Bridson, 2009.
 
 #include <cassert>
-#include <fenv_include.h>
+#include "fenv_include.h"
 #include <cmath>
 #include <limits>
-#include <tunicate.h>
-#include <expansion.h>
-#include <neg.h>
+#include "tunicate.h"
+#include "expansion.h"
+#include "neg.h"
 
 //==============================================================================
 double

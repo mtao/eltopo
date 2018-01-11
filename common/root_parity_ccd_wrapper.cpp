@@ -9,15 +9,15 @@
 // ---------------------------------------------------------
 
 
-#include <ccd_defs.h>
+#include "ccd_defs.h"
 
 
 #ifdef USE_ROOT_PARITY_CCD
 
-#include <ccd_wrapper.h>
-#include <collisionqueries.h>
-#include <rootparitycollisiontest.h>
-#include <tunicate.h>
+#include "ccd_wrapper.h"
+#include "collisionqueries.h"
+#include "rootparitycollisiontest.h"
+#include "tunicate.h"
 
 namespace 
 {

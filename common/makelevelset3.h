@@ -1,8 +1,8 @@
 #ifndef MAKELEVELSET3_H
 #define MAKELEVELSET3_H
 
-#include <array3.h>
-#include <vec.h>
+#include "array3.h"
+#include "vec.h"
 
 // TODO: make 32/64 bit agnostic
 

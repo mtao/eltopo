@@ -1,4 +1,4 @@
-#include <marching_tiles_hires.h>
+#include "marching_tiles_hires.h"
 
 // definition of acute tile
 static const int num_nodes=40;

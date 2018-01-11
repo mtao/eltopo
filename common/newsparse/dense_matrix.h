@@ -1,7 +1,7 @@
 #ifndef DENSE_MATRIX_H
 #define DENSE_MATRIX_H
 
-#include <linear_operator.h>
+#include "linear_operator.h"
 
 //============================================================================
 struct DenseMatrix: public LinearOperator

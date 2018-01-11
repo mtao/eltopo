@@ -7,16 +7,16 @@
 //
 // ---------------------------------------------------------
 
-#include <edgeflipper.h>
+#include "edgeflipper.h"
 
-#include <broadphase.h>
-#include <ccd_wrapper.h>
-#include <collisionqueries.h>
-#include <collisionpipeline.h>
-#include <nondestructivetrimesh.h>
-#include <runstats.h>
-#include <surftrack.h>
-#include <trianglequality.h>
+#include "broadphase.h"
+#include "../common/ccd_wrapper.h"
+#include "../common/collisionqueries.h"
+#include "collisionpipeline.h"
+#include "nondestructivetrimesh.h"
+#include "../common/runstats.h"
+#include "surftrack.h"
+#include "trianglequality.h"
 
 
 // --------------------------------------------------------

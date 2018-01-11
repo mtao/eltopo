@@ -20,7 +20,7 @@ double get_time_in_seconds(void)
 
 #else
 
-#include <wallclocktime.h>
+#include "wallclocktime.h"
 #include <sys/time.h>
 
 static long base_seconds=0;

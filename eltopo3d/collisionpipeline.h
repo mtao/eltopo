@@ -11,8 +11,8 @@
 #define EL_TOPO_COLLISIONPIPELINE_H
 
 #include <deque>
-#include <options.h>
-#include <vec.h>
+#include "options.h"
+#include "../common/vec.h"
 
 
 bool check_edge_triangle_intersection_by_index(size_t edge_a, 

@@ -1,9 +1,9 @@
 #ifndef MARCHING_TRIANGLES_H
 #define MARCHING_TRIANGLES_H
 
-#include <array2.h>
-#include <hashtable.h>
-#include <vec.h>
+#include "array2.h"
+#include "hashtable.h"
+#include "vec.h"
 
 struct MarchingTriangles
 {

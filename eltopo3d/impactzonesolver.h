@@ -15,7 +15,7 @@
 //  Nested includes
 // ---------------------------------------------------------
 
-#include <collisionpipeline.h>
+#include "collisionpipeline.h"
 #include <vector>
 
 // ---------------------------------------------------------

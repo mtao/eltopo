@@ -6,9 +6,9 @@
 #ifndef TUNICATE_ROOTPARITYCOLLISIONTEST_H
 #define TUNICATE_ROOTPARITYCOLLISIONTEST_H
 
-#include <vec.h>
-#include <interval.h>
-#include <expansion.h>
+#include "vec.h"
+#include "interval.h"
+#include "expansion.h"
 
 namespace rootparity 
 {

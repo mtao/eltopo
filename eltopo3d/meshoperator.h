@@ -10,7 +10,7 @@
 #ifndef EL_TOPO_MESHOPERATOR_H
 #define EL_TOPO_MESHOPERATOR_H
 
-#include <commonoptions.h>
+#include "../common/commonoptions.h"
 #include <vector>
 
 class SurfTrack;

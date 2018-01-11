@@ -8,8 +8,8 @@
 //
 // ---------------------------------------------------------
 
-#include <eltopo.h>
-#include <surftrack.h>
+#include "eltopo.h"
+#include "surftrack.h"
 
 
 static int to_int( size_t a )

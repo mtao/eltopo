@@ -9,14 +9,14 @@
 // ---------------------------------------------------------
 
 
-#include <ccd_defs.h>
-#include <ccd_wrapper.h>
+#include "ccd_defs.h"
+#include "ccd_wrapper.h"
 
 bool simplex_verbose = false;
 
 #ifdef USE_CUBIC_SOLVER_CCD
 
-#include <collisionqueries.h>
+#include "collisionqueries.h"
 
 namespace
 {

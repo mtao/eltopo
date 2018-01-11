@@ -8,15 +8,15 @@
 // ---------------------------------------------------------
 
 
-#include <collisionpipeline.h>
+#include "collisionpipeline.h"
 
-#include <broadphase.h>
-#include <ccd_wrapper.h>
-#include <collisionqueries.h>
-#include <dynamicsurface.h>
-#include <impactzonesolver.h>
-#include <runstats.h>
-#include <wallclocktime.h>
+#include "broadphase.h"
+#include "../common/ccd_wrapper.h"
+#include "../common/collisionqueries.h"
+#include "dynamicsurface.h"
+#include "impactzonesolver.h"
+#include "../common/runstats.h"
+#include "../common/wallclocktime.h"
 
 static const double IMPULSE_MULTIPLIER = 1.0;
     

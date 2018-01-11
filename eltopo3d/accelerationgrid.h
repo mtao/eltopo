@@ -14,8 +14,8 @@
 // Nested includes
 // ---------------------------------------------------------
 
-#include <array3.h>
-#include <vec.h>
+#include "../common/array3.h"
+#include "../common/vec.h"
 
 // ---------------------------------------------------------
 //  Forwards and typedefs

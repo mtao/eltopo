@@ -1,9 +1,9 @@
 #ifndef MARCHING_TILES_HIRES_H
 #define MARCHING_TILES_HIRES_H
 
-#include <array3.h>
-#include <hashtable.h>
-#include <vec.h>
+#include "array3.h"
+#include "hashtable.h"
+#include "vec.h"
 
 struct MarchingTilesHiRes
 {

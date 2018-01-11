@@ -3,8 +3,8 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <fstream>
-#include <gluvi.h>
-#include <vec.h>
+#include "gluvi.h"
+#include "vec.h"
 #ifdef _MSC_VER
 #include <windows.h>
 #include <gl/GL.h>

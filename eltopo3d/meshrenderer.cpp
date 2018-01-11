@@ -7,12 +7,12 @@
 //
 // ---------------------------------------------------------
 
-#include <meshrenderer.h>
+#include "meshrenderer.h"
 
 #ifndef NO_GUI
 
-#include <dynamicsurface.h>
-#include <gluvi.h>
+#include "dynamicsurface.h"
+#include "../common/gluvi.h"
 
 
 //namespace {
