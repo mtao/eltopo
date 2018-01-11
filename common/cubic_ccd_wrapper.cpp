@@ -976,7 +976,7 @@ bool point_triangle_collision(const Vec3d& x0, const Vec3d& xnew0, size_t ,
     Vec3d dx1 = xnew1 - x1;
     Vec3d dx2 = xnew2 - x2;
     Vec3d dx3 = xnew3 - x3;   
-    relative_normal_displacement = dot( normal, dx0 - bary1*dx1 - bary2*dx2 - bary3*dx3 );
+    relative_normal_displacement = dot( normal, dx0 - bary1*dx1 - bary2*dx2 - bary3*dx3 )*t;
     
     return cubic_result;
 }
@@ -1015,7 +1015,7 @@ bool segment_segment_collision(const Vec3d& x0, const Vec3d& xnew0, size_t ,
     Vec3d dx2 = xnew2 - x2;
     Vec3d dx3 = xnew3 - x3;   
     
-    relative_normal_displacement = dot( normal, bary0*dx0 + (1.0-bary0)*dx1 - bary2*dx2 - (1.0-bary2)*dx3 );
+    relative_normal_displacement = dot( normal, bary0*dx0 + (1.0-bary0)*dx1 - bary2*dx2 - (1.0-bary2)*dx3 )*t;
     
     return cubic_result;
 }

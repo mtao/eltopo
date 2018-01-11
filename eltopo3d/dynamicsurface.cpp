@@ -430,13 +430,14 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
                 solver_ok = impactZoneSolver.inelastic_impact_zones( curr_dt );            
             }
             
-            if ( !solver_ok )
-            {
-                //if ( m_verbose ) 
-                { std::cout << "RIZ" << std::endl; }
-                // punt to rigid impact zones
-                solver_ok = impactZoneSolver.rigid_impact_zones( curr_dt );
-            }  
+            // Leo: removed Rigid Impact Zones (may return soft solutions)
+            // if ( !solver_ok )
+            // {
+            //     //if ( m_verbose ) 
+            //     { std::cout << "RIZ" << std::endl; }
+            //     // punt to rigid impact zones
+            //     solver_ok = impactZoneSolver.rigid_impact_zones( curr_dt );
+            // }  
             
             if ( !solver_ok )
             {
@@ -727,12 +728,14 @@ void DynamicSurface::triangle_static_bounds(size_t t, Vec3d &xmin, Vec3d &xmax) 
 
 void DynamicSurface::vertex_continuous_bounds(size_t v, Vec3d &xmin, Vec3d &xmax) const
 {
-    if ( m_mesh.m_vertex_to_triangle_map[v].empty() )
-    {
-        xmin = Vec3d(m_aabb_padding);
-        xmax = -Vec3d(m_aabb_padding);
-    }
-    else
+    // Alec: Why is this giving a bogus xmin/xmax around the origin for
+    // unreferenced vertices?
+    //if ( m_mesh.m_vertex_to_triangle_map[v].empty() )
+    //{
+    //    xmin = Vec3d(m_aabb_padding);
+    //    xmax = -Vec3d(m_aabb_padding);
+    //}
+    //else
     {
         minmax( get_position(v), get_newposition(v), xmin, xmax);
         xmin -= Vec3d(m_aabb_padding);
