@@ -126,7 +126,10 @@ void CollisionPipeline::apply_impulse(const Vec4d& alphas,
     
     if ( i > 100.0 / dt )
     {
+      if(m_surface.m_verbose)
+      {
         std::cout << "big impulse: " << i << std::endl;
+      }
     }
     
     Vec3d pre_relative_velocity = s0*v0 + s1*v1 + s2*v2 + s3*v3;
@@ -1373,16 +1376,20 @@ void CollisionPipeline::detect_collisions(size_t edge_index,
     {
         Collision& coll = collisions[i];
         
-        std::cout << "\n ======== Collision: is_edge_edge: " << coll.m_is_edge_edge << ", indices: " << coll.m_vertex_indices << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "\n ======== Collision: is_edge_edge: " << coll.m_is_edge_edge << ", indices: " << coll.m_vertex_indices << std::endl;
+        }
         
         if ( coll.m_is_edge_edge )
         {
             
             size_t edge0 = m_surface.m_mesh.get_edge_index( coll.m_vertex_indices[0], coll.m_vertex_indices[1] );         
-            std::cout << "edge0: " << edge0 << std::endl;
+        if(m_surface.m_verbose) std::cout << "edge0: " << edge0 << std::endl;
+
             
             size_t edge1 = m_surface.m_mesh.get_edge_index( coll.m_vertex_indices[2], coll.m_vertex_indices[3] ); 
-            std::cout << "edge1: " << edge1 << std::endl;
+        if(m_surface.m_verbose) std::cout << "edge1: " << edge1 << std::endl;
             
             Vec3st check_candidate( edge0, edge1, 1 );
             Collision check_collision;
@@ -1401,7 +1408,9 @@ void CollisionPipeline::detect_collisions(size_t edge_index,
                 }
             }
             
-            if ( !edge1_found ) { std::cout << "broadphase didn't find edge " << edge1 << std::endl; }           
+            if ( !edge1_found ) { 
+        if(m_surface.m_verbose) std::cout << "broadphase didn't find edge " <<
+          edge1 << std::endl; }           
             
             CollisionCandidateSet collision_candidates1;
             add_edge_candidates( edge1, true, true, collision_candidates1 );
@@ -1414,7 +1423,7 @@ void CollisionPipeline::detect_collisions(size_t edge_index,
                 }
             }
             
-            if ( !edge0_found ) { std::cout << "broadphase didn't find edge " << edge0 << std::endl; }
+            if ( !edge0_found && m_surface.m_verbose) { std::cout << "broadphase didn't find edge " << edge0 << std::endl; }
             
         }
         else
@@ -1433,7 +1442,7 @@ void CollisionPipeline::detect_collisions(size_t edge_index,
                 }
             }
             
-            if ( !tri_found ) { std::cout << "broadphase didn't find tri " << collision_tri << std::endl; }           
+            if ( !tri_found && m_surface.m_verbose) { std::cout << "broadphase didn't find tri " << collision_tri << std::endl; }           
             
             CollisionCandidateSet t_collision_candidates;
             add_triangle_candidates( collision_tri, true, true, t_collision_candidates );
@@ -1446,7 +1455,7 @@ void CollisionPipeline::detect_collisions(size_t edge_index,
                 }
             }
             
-            if ( !vert_found ) { std::cout << "broadphase didn't find vertex " << vert << std::endl; }
+            if ( !vert_found && m_surface.m_verbose) { std::cout << "broadphase didn't find vertex " << vert << std::endl; }
             
         }
         
@@ -1797,12 +1806,15 @@ void CollisionPipeline::get_intersections( bool degeneracy_counts_as_intersectio
                                                t2, triangle[2], 
                                                degeneracy_counts_as_intersection, m_surface.m_verbose ) )
             {
+              if(m_surface.m_verbose)
+              {
                 std::cout << "intersection: " << edge << " vs " << triangle << std::endl;
                 std::cout << "e0: " << e0 << std::endl;
                 std::cout << "e1: " << e1 << std::endl;
                 std::cout << "t0: " << t0 << std::endl;
                 std::cout << "t1: " << t1 << std::endl;
                 std::cout << "t2: " << t2 << std::endl;            
+              }
                 
                 intersections.push_back( Intersection( edge_candidates[j], i ) );
             }
@@ -1831,7 +1843,10 @@ void CollisionPipeline::assert_mesh_is_intersection_free( bool degeneracy_counts
         const Vec3st& triangle = m_surface.m_mesh.get_triangle( intersections[i].m_triangle_index );
         const Vec2st& edge = m_surface.m_mesh.m_edges[ intersections[i].m_edge_index ];
         
-        std::cout << "Intersection!  Triangle " << triangle << " vs edge " << edge << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "Intersection!  Triangle " << triangle << " vs edge " << edge << std::endl;
+        }
         
         segment_triangle_intersection(m_surface.get_position(edge[0]), edge[0], 
                                       m_surface.get_position(edge[1]), edge[1],
@@ -1867,7 +1882,10 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
         const Vec3st& triangle = m_surface.m_mesh.get_triangle( intersections[i].m_triangle_index );
         const Vec2st& edge = m_surface.m_mesh.m_edges[ intersections[i].m_edge_index ];
         
-        std::cout << "Intersection!  Triangle " << triangle << " vs edge " << edge << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "Intersection!  Triangle " << triangle << " vs edge " << edge << std::endl;
+        }
         
         segment_triangle_intersection(m_surface.get_position(edge[0]), edge[0], 
                                       m_surface.get_position(edge[1]), edge[1],
@@ -1882,29 +1900,47 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
         const Vec3d& tb = m_surface.get_position(triangle[1]);
         const Vec3d& tc = m_surface.get_position(triangle[2]);
         
-        m_surface.m_verbose = true;
+        //m_surface.m_verbose = true;
         
         std::vector<Collision> check_collisions;
         m_surface.m_collision_pipeline.detect_collisions( check_collisions );
-        std::cout << "number of collisions detected: " << check_collisions.size() << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "number of collisions detected: " << check_collisions.size() << std::endl;
+        }
         
         for ( size_t c = 0; c < check_collisions.size(); ++c )
         {
             const Collision& collision = check_collisions[c];
-            std::cout << "Collision " << c << ": " << std::endl;
+            if(m_surface.m_verbose)
+            {
+              std::cout << "Collision " << c << ": " << std::endl;
+            }
             if ( collision.m_is_edge_edge )
             {
+              if(m_surface.m_verbose)
+              {
                 std::cout << "edge-edge: ";
+              }
             }
             else
             {
+              if(m_surface.m_verbose)
+              {
                 std::cout << "point-triangle: ";
+              }
             }
-            std::cout << collision.m_vertex_indices << std::endl;
+            if(m_surface.m_verbose)
+            {
+              std::cout << collision.m_vertex_indices << std::endl;
+            }
             
         }
         
-        std::cout << "-----\n edge-triangle check using m_positions:" << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "-----\n edge-triangle check using m_positions:" << std::endl;
+        }
         
         bool result = segment_triangle_intersection(m_surface.get_position(edge[0]), edge[0], 
                                                     m_surface.get_position(edge[1]), edge[1],
@@ -1914,9 +1950,12 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
                                                     degeneracy_counts_as_intersection, 
                                                     m_surface.m_verbose );
         
-        std::cout << "result: " << result << std::endl;
-        
-        std::cout << "-----\n edge-triangle check using new m_positions" << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "result: " << result << std::endl;
+
+          std::cout << "-----\n edge-triangle check using new m_positions" << std::endl;
+        }
         
         result = segment_triangle_intersection(m_surface.get_newposition(edge[0]), edge[0], 
                                                m_surface.get_newposition(edge[1]), edge[1],
@@ -1926,7 +1965,10 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
                                                degeneracy_counts_as_intersection, 
                                                m_surface.m_verbose );
         
-        std::cout << "result: " << result << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "result: " << result << std::endl;
+        }
         
         const Vec3d& ea_new = m_surface.get_newposition(edge[0]);
         const Vec3d& eb_new = m_surface.get_newposition(edge[1]);
@@ -1934,54 +1976,60 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
         const Vec3d& tb_new = m_surface.get_newposition(triangle[1]);
         const Vec3d& tc_new = m_surface.get_newposition(triangle[2]);
         
-        std::cout.precision(20);
-        
-        std::cout << "old: (edge0 edge1 tri0 tri1 tri2 )" << std::endl;
-        
-        std::cout << "Vec3d ea( " << ea[0] << ", " << ea[1] << ", " << ea[2] << ");" << std::endl;
-        std::cout << "Vec3d eb( " << eb[0] << ", " << eb[1] << ", " << eb[2] << ");" << std::endl;            
-        std::cout << "Vec3d ta( " << ta[0] << ", " << ta[1] << ", " << ta[2] << ");" << std::endl;
-        std::cout << "Vec3d tb( " << tb[0] << ", " << tb[1] << ", " << tb[2] << ");" << std::endl;            
-        std::cout << "Vec3d tc( " << tc[0] << ", " << tc[1] << ", " << tc[2] << ");" << std::endl;
-        
-        std::cout << "Vec3d ea_new( " << ea_new[0] << ", " << ea_new[1] << ", " << ea_new[2] << ");" << std::endl;
-        std::cout << "Vec3d eb_new( " << eb_new[0] << ", " << eb_new[1] << ", " << eb_new[2] << ");" << std::endl;            
-        std::cout << "Vec3d ta_new( " << ta_new[0] << ", " << ta_new[1] << ", " << ta_new[2] << ");" << std::endl;
-        std::cout << "Vec3d tb_new( " << tb_new[0] << ", " << tb_new[1] << ", " << tb_new[2] << ");" << std::endl;            
-        std::cout << "Vec3d tc_new( " << tc_new[0] << ", " << tc_new[1] << ", " << tc_new[2] << ");" << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout.precision(20);
+
+          std::cout << "old: (edge0 edge1 tri0 tri1 tri2 )" << std::endl;
+
+          std::cout << "Vec3d ea( " << ea[0] << ", " << ea[1] << ", " << ea[2] << ");" << std::endl;
+          std::cout << "Vec3d eb( " << eb[0] << ", " << eb[1] << ", " << eb[2] << ");" << std::endl;            
+          std::cout << "Vec3d ta( " << ta[0] << ", " << ta[1] << ", " << ta[2] << ");" << std::endl;
+          std::cout << "Vec3d tb( " << tb[0] << ", " << tb[1] << ", " << tb[2] << ");" << std::endl;            
+          std::cout << "Vec3d tc( " << tc[0] << ", " << tc[1] << ", " << tc[2] << ");" << std::endl;
+
+          std::cout << "Vec3d ea_new( " << ea_new[0] << ", " << ea_new[1] << ", " << ea_new[2] << ");" << std::endl;
+          std::cout << "Vec3d eb_new( " << eb_new[0] << ", " << eb_new[1] << ", " << eb_new[2] << ");" << std::endl;            
+          std::cout << "Vec3d ta_new( " << ta_new[0] << ", " << ta_new[1] << ", " << ta_new[2] << ");" << std::endl;
+          std::cout << "Vec3d tb_new( " << tb_new[0] << ", " << tb_new[1] << ", " << tb_new[2] << ");" << std::endl;            
+          std::cout << "Vec3d tc_new( " << tc_new[0] << ", " << tc_new[1] << ", " << tc_new[2] << ");" << std::endl;
+        }
         
         std::vector<double> possible_times;
         
         Vec3d normal;
         
-        std::cout << "-----" << std::endl;
+        if(m_surface.m_verbose) std::cout << "-----" << std::endl;
         
         assert( !segment_segment_collision(ea, ea_new, edge[0], eb, eb_new, edge[1], 
                                            ta, ta_new, triangle[0], tb, tb_new, triangle[1] ) );
         
-        std::cout << "-----" << std::endl;
+        if(m_surface.m_verbose) std::cout << "-----" << std::endl;
         
         assert( !segment_segment_collision(ea, ea_new, edge[0], eb, eb_new, edge[1], 
                                            tb, tb_new, triangle[1], tc, tc_new, triangle[2] ) );
         
-        std::cout << "-----" << std::endl;
+        if(m_surface.m_verbose) std::cout << "-----" << std::endl;
         
         assert( !segment_segment_collision(ea, ea_new, edge[0], eb, eb_new, edge[1], 
                                            ta, ta_new, triangle[0], tc, tc_new, triangle[2] ) );
         
-        std::cout << "-----" << std::endl;
+        if(m_surface.m_verbose) std::cout << "-----" << std::endl;
         
         assert( !point_triangle_collision(ea, ea_new, edge[0], ta, ta_new, triangle[0], 
                                           tb, tb_new, triangle[1], tc, tc_new, triangle[2] ) );
         
-        std::cout << "-----" << std::endl;
+        if(m_surface.m_verbose) std::cout << "-----" << std::endl;
         
         assert( !point_triangle_collision(eb, eb_new, edge[1], ta, ta_new, triangle[0], 
                                           tb, tb_new, triangle[1], tc, tc_new, triangle[2] ) );
         
-        m_surface.m_verbose = false;
+        //m_surface.m_verbose = false;
         
-        std::cout << "no collisions detected" << std::endl;
+        if(m_surface.m_verbose)
+        {
+          std::cout << "no collisions detected" << std::endl;
+        }
         
         assert( false );
         

@@ -625,7 +625,10 @@ bool ImpactZoneSolver::rigid_impact_zones(double dt)
         else
         {
             bool detect_ok = m_surface.m_collision_pipeline.detect_new_collisions( impact_zones, total_collisions );
-            std::cout << "new collisions detected: " << total_collisions.size() << std::endl;
+            if(m_surface.m_verbose)
+            {
+                std::cout << "new collisions detected: " << total_collisions.size() << std::endl;
+            }
             
             if ( !detect_ok )
             {
