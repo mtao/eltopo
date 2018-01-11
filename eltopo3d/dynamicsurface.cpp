@@ -371,6 +371,8 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
     
     static const bool DEGEN_DOES_NOT_COUNT = false;   
     static const bool USE_NEW_POSITIONS = true;
+    // initialize
+    actual_dt = 0;
     
     if ( m_verbose ) 
     {
@@ -391,8 +393,12 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
             m_collision_pipeline.get_intersections( DEGEN_DOES_NOT_COUNT, false, intersections );
             if ( !intersections.empty() )
             {
+              if(m_verbose)
+              {
                 std::cout << "Intersection in mesh before integration" << std::endl;
-                assert(false);
+              }
+
+              break;
             }
         }
         
@@ -425,7 +431,7 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
             
             if ( !solver_ok )
             {
-                //if ( m_verbose ) 
+                if ( m_verbose ) 
                 { std::cout << "IIZ" << std::endl; }
                 solver_ok = impactZoneSolver.inelastic_impact_zones( curr_dt );            
             }
@@ -433,7 +439,7 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
             // Leo: removed Rigid Impact Zones (may return soft solutions)
             // if ( !solver_ok )
             // {
-            //     //if ( m_verbose ) 
+            //     if ( m_verbose ) 
             //     { std::cout << "RIZ" << std::endl; }
             //     // punt to rigid impact zones
             //     solver_ok = impactZoneSolver.rigid_impact_zones( curr_dt );
@@ -459,7 +465,10 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
             
             if ( !intersections.empty() )
             {
+              if(m_verbose)
+              {
                 std::cout << "Intersection in predicted mesh." << std::endl;
+              }
                 
                 //            extern bool simplex_verbose;
                 //            simplex_verbose = true;
@@ -528,11 +537,14 @@ void DynamicSurface::integrate( double desired_dt, double& actual_dt )
                 
                 if ( all_collisions_handled )
                 {
+                  if(m_verbose)
+                  {
                     std::cout << "Intersection in predicted mesh but handle collisions returned ok." << std::endl;
-                    assert( false );
+                  }
+                    break;
                 }
                 
-                //if ( m_verbose )
+                if ( m_verbose )
                 {
                     std::cout << "Intersection in predicted mesh, cutting timestep." << std::endl;
                 }
@@ -914,6 +926,8 @@ void DynamicSurface::check_static_broad_phase_is_up_to_date() const
         if ( overlapping_edges.size() != brute_force_overlapping_edges.size() )
         {
             
+          if(m_verbose)
+          {
             std::cout << "edge " << i << ": " << m_mesh.m_edges[i] << std::endl;
             std::cout << "overlapping_edges.size(): " << overlapping_edges.size() << std::endl;
             for ( size_t k = 0; k < overlapping_edges.size(); ++k )
@@ -926,6 +940,7 @@ void DynamicSurface::check_static_broad_phase_is_up_to_date() const
             {
                 std::cout << k << ": " << brute_force_overlapping_edges[k] << std::endl;
             }
+          }
             
         }
         
@@ -983,6 +998,8 @@ void DynamicSurface::check_static_broad_phase_is_up_to_date() const
         
         if ( overlapping_vertices.size() != brute_force_overlapping_vertices.size() )
         {
+          if(m_verbose)
+          {
             std::cout << "triangle " << i << ": " << m_mesh.get_triangle(i) << std::endl;
             std::cout << "overlapping_vertices.size(): " << overlapping_vertices.size() << std::endl;
             for ( size_t k = 0; k < overlapping_vertices.size(); ++k )
@@ -997,6 +1014,8 @@ void DynamicSurface::check_static_broad_phase_is_up_to_date() const
                 std::cout << k << ": " << brute_force_overlapping_vertices[k] << " --- ";
                 std::cout << "is deleted: " << m_mesh.vertex_is_deleted( brute_force_overlapping_vertices[k] ) << std::endl;
             }
+          }
+
         }
         
         assert( overlapping_vertices.size() == brute_force_overlapping_vertices.size() );
@@ -1122,6 +1141,8 @@ void DynamicSurface::check_continuous_broad_phase_is_up_to_date() const
         if ( overlapping_edges.size() != brute_force_overlapping_edges.size() )
         {
             
+          if(m_verbose)
+          {
             std::cout << "edge " << i << ": " << m_mesh.m_edges[i] << std::endl;
             std::cout << "overlapping_edges.size(): " << overlapping_edges.size() << std::endl;
             for ( size_t k = 0; k < overlapping_edges.size(); ++k )
@@ -1134,6 +1155,7 @@ void DynamicSurface::check_continuous_broad_phase_is_up_to_date() const
             {
                 std::cout << k << ": " << brute_force_overlapping_edges[k] << std::endl;
             }
+          }
             
         }
         
