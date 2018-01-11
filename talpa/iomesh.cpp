@@ -601,7 +601,7 @@ bool output_shadow_rib( Gluvi::Target3D& light, const std::vector<Vec3d>& positi
 
     delete[] filename;
 
-    if( out == NULL )
+    if( !out )
     {
         return false;
     }
@@ -623,7 +623,7 @@ bool output_shadow_rib( Gluvi::Target3D& light, const std::vector<Vec3d>& positi
     
     delete[] filename;
     
-    if( out == NULL )
+    if( !out )
     {
         return false;
     }
@@ -703,7 +703,7 @@ bool output_rib( const std::vector<Vec3d>& positions, const NonDestructiveTriMes
 
     delete[] filename;
 
-    if( out == NULL )
+    if( !out )
     {
         return false;
     }
@@ -731,7 +731,7 @@ bool output_rib( const std::vector<Vec3d>& positions, const NonDestructiveTriMes
     
     delete[] filename;
     
-    if( out == NULL )
+    if( !out )
     {
         return false;
     }
