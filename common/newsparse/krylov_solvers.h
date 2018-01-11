@@ -1,7 +1,7 @@
 #ifndef KRYLOV_SOLVERS_H
 #define KRYLOV_SOLVERS_H
 
-#include <linear_operator.h>
+#include "linear_operator.h"
 
 enum KrylovSolverStatus{
     KRYLOV_CONVERGED,

@@ -11,14 +11,14 @@
 // Includes
 // ---------------------------------------------------------
 
-#include <accelerationgrid.h>
+#include "accelerationgrid.h"
 
-#include <array3.h>
+#include "../common/array3.h"
 #include <limits>
-#include <util.h>
-#include <vec.h>
+#include "../common/util.h"
+#include "../common/vec.h"
 #include <vector>
-#include <wallclocktime.h>
+#include "../common/wallclocktime.h"
 
 // ---------------------------------------------------------
 // Global externs

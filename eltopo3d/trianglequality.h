@@ -11,7 +11,7 @@
 #ifndef EL_TOPO_TRIANGLEQUALITY_H
 #define EL_TOPO_TRIANGLEQUALITY_H
 
-#include <vec.h>
+#include "../common/vec.h"
 
 // ---------------------------------------------------------
 //  Forwards and typedefs

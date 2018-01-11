@@ -1,6 +1,6 @@
-#include <array2.h>
-#include <array3.h>
-#include <vec.h>
+#include "array2.h"
+#include "array3.h"
+#include "vec.h"
 
 //Functions for dealing with grid-based level sets, data stored at nodes
 float interpolate_phi(const Vec2f& point, const Array2f& grid, const Vec2f& origin, const float dx);

@@ -1,8 +1,8 @@
 #ifndef MATLAPACK_H
 #define MATLAPACK_H
 
-#include <lapack_wrapper.h>
-#include <mat.h>
+#include "lapack_wrapper.h"
+#include "mat.h"
 
 template<unsigned int M, unsigned int N, class T>
 void invert(Mat<M,N,T>& matrix) {

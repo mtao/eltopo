@@ -7,16 +7,16 @@
 //
 // ---------------------------------------------------------
 
-#include <edgecollapser.h>
+#include "edgecollapser.h"
 
-#include <broadphase.h>
-#include <collisionpipeline.h>
-#include <collisionqueries.h>
-#include <nondestructivetrimesh.h>
-#include <runstats.h>
-#include <subdivisionscheme.h>
-#include <surftrack.h>
-#include <trianglequality.h>
+#include "broadphase.h"
+#include "collisionpipeline.h"
+#include "../common/collisionqueries.h"
+#include "nondestructivetrimesh.h"
+#include "../common/runstats.h"
+#include "subdivisionscheme.h"
+#include "surftrack.h"
+#include "trianglequality.h"
 #include <cstdio>
 
 // --------------------------------------------------------

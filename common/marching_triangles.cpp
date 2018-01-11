@@ -1,5 +1,5 @@
-#include <array2_utils.h>
-#include <marching_triangles.h>
+#include "array2_utils.h"
+#include "marching_triangles.h"
 
 void MarchingTriangles::
 contour_grid(void)

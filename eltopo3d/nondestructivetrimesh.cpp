@@ -13,13 +13,13 @@
 // Includes
 // ---------------------------------------------------------
 
-#include <nondestructivetrimesh.h>
+#include "nondestructivetrimesh.h"
 
 #include <cmath>
 #include <cstdarg>
 #include <cstdlib>
 #include <fstream>
-#include <wallclocktime.h>
+#include "../common/wallclocktime.h"
 
 // ---------------------------------------------------------
 // Local constants, typedefs, macros

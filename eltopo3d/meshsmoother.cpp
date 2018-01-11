@@ -7,13 +7,13 @@
 //
 // ---------------------------------------------------------
 
-#include <meshsmoother.h>
+#include "meshsmoother.h"
 
-#include <impactzonesolver.h>
-#include <lapack_wrapper.h>
-#include <mat.h>
-#include <nondestructivetrimesh.h>
-#include <surftrack.h>
+#include "impactzonesolver.h"
+#include "../common/lapack_wrapper.h"
+#include "../common/mat.h"
+#include "nondestructivetrimesh.h"
+#include "surftrack.h"
 
 // ========================================================
 //  NULL-space smoothing functions

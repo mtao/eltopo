@@ -1,5 +1,5 @@
-#include <dense_matrix.h>
-#include <blas_wrapper.h>
+#include "dense_matrix.h"
+#include "blas_wrapper.h"
 #include <cstring>
 
 void DenseMatrix::

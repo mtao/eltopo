@@ -14,8 +14,8 @@
 // Nested includes
 // ---------------------------------------------------------
 
-#include <broadphase.h>
-#include <accelerationgrid.h>
+#include "broadphase.h"
+#include "accelerationgrid.h"
 
 // ---------------------------------------------------------
 //  Forwards and typedefs

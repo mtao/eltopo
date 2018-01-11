@@ -2,7 +2,7 @@
 #define UTIL_H
 
 #include <algorithm>
-#include <array3.h>
+#include "array3.h"
 #include <climits>
 #include <cmath>
 #include <iostream>

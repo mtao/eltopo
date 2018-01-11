@@ -1,6 +1,6 @@
 // Released into the public domain by Robert Bridson, 2009.
 
-#include <neg.h>
+#include "neg.h"
 
 //==============================================================================
 // Try to force the compiler to add a negative instead of subtracting.

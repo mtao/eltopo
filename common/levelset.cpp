@@ -1,7 +1,7 @@
-#include <levelset.h>
-#include <util.h>
-#include <array2_utils.h>
-#include <array3_utils.h>
+#include "levelset.h"
+#include "util.h"
+#include "array2_utils.h"
+#include "array3_utils.h"
 
 float interpolate_phi(const Vec2f& point, const Array2f& grid, const Vec2f& origin, const float dx) {
     float inv_dx = 1/dx;

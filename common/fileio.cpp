@@ -6,8 +6,8 @@
  *
  */
 
-#include <fileio.h>
-#include <bfstream.h>
+#include "fileio.h"
+#include "bfstream.h"
 
 const unsigned int NUM_RAYTRACER_BOOLEAN_PARAMETERS = 2;
 const unsigned int NUM_RAYTRACER_FLOAT_PARAMETERS = 9;

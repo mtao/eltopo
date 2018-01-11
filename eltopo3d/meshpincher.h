@@ -14,9 +14,9 @@
 //  Nested includes
 // ---------------------------------------------------------
 
-#include <meshoperator.h>
+#include "meshoperator.h"
 #include <vector>
-#include <vec.h>
+#include "../common/vec.h"
 
 // ---------------------------------------------------------
 //  Forwards and typedefs

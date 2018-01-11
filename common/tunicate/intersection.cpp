@@ -3,7 +3,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
-#include <tunicate.h>
+#include "tunicate.h"
 
 //==============================================================================
 static bool

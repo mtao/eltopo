@@ -14,26 +14,26 @@
 // Includes
 // ---------------------------------------------------------
 
-#include <surftrack.h>
+#include "surftrack.h"
 
-#include <array3.h>
-#include <broadphase.h>
+#include "../common/array3.h"
+#include "broadphase.h"
 #include <cassert>
-#include <ccd_wrapper.h>
-#include <collisionpipeline.h>
-#include <collisionqueries.h>
-#include <edgeflipper.h>
-#include <impactzonesolver.h>
-#include <lapack_wrapper.h>
-#include <nondestructivetrimesh.h>
+#include "../common/ccd_wrapper.h"
+#include "collisionpipeline.h"
+#include "../common/collisionqueries.h"
+#include "edgeflipper.h"
+#include "impactzonesolver.h"
+#include "../common/lapack_wrapper.h"
+#include "nondestructivetrimesh.h"
 #include <queue>
-#include <runstats.h>
-#include <subdivisionscheme.h>
-#include <stdio.h>
-#include <trianglequality.h>
-#include <vec.h>
+#include "../common/runstats.h"
+#include "subdivisionscheme.h"
+#include "stdio.h"
+#include "trianglequality.h"
+#include "../common/vec.h"
 #include <vector>
-#include <wallclocktime.h>
+#include "../common/wallclocktime.h"
 
 
 // ---------------------------------------------------------

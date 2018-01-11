@@ -2,7 +2,7 @@
 #define MAT_H
 
 #include <cstring>
-#include <vec.h>
+#include "vec.h"
 
 template<unsigned int M, unsigned int N, class T>
 struct Mat

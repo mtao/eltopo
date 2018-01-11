@@ -7,9 +7,9 @@
 //
 // ---------------------------------------------------------
 
-#include <trianglequality.h>
+#include "trianglequality.h"
 #include <limits>
-#include <surftrack.h>
+#include "surftrack.h"
 
 
 // ----------------------

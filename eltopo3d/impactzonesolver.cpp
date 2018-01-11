@@ -7,15 +7,15 @@
 //
 // ---------------------------------------------------------
 
-#include <collisionpipeline.h>
+#include "collisionpipeline.h"
 
-#include <ccd_wrapper.h>
-#include <dynamicsurface.h>
-#include <impactzonesolver.h>
-#include <krylov_solvers.h>
-#include <mat.h>
-#include <sparse_matrix.h>
-#include <runstats.h>
+#include "../common/ccd_wrapper.h"
+#include "dynamicsurface.h"
+#include "impactzonesolver.h"
+#include "../common/newsparse/krylov_solvers.h"
+#include "../common/mat.h"
+#include "../common/newsparse/sparse_matrix.h"
+#include "../common/runstats.h"
 
 namespace 
 {

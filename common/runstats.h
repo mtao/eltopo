@@ -11,7 +11,7 @@
 #ifndef RUNSTATS_H
 #define RUNSTATS_H
 
-#include <stdint.h>
+#include "stdint.h"
 #include <map>
 #include <string>
 #include <vector>

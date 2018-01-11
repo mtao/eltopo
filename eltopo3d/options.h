@@ -10,7 +10,7 @@
 #ifndef EL_TOPO_OPTIONS_H
 #define EL_TOPO_OPTIONS_H
 
-#include <commonoptions.h>
+#include "../common/commonoptions.h"
 
 // ---------------------------------------------------------
 // Global constants

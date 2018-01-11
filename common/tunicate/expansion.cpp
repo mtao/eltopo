@@ -1,7 +1,7 @@
 // Released into the public-domain by Robert Bridson, 2009.
 // Modified by Tyson Brochu, 2011.
 
-#include <expansion.h>
+#include "expansion.h"
 
 #include <cassert>
 #include <cmath>

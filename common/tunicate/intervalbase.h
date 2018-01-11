@@ -11,7 +11,7 @@
 #ifndef TUNICATE_INTERVAL_BASE_H
 #define TUNICATE_INTERVAL_BASE_H
 
-#include <vec.h>
+#include "vec.h"
 
 class IntervalBase
 {

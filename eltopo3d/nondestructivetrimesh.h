@@ -17,9 +17,9 @@
 // ---------------------------------------------------------
 
 #include <cassert>
-#include <options.h>
+#include "options.h"
 #include <vector>
-#include <vec.h>
+#include "../common/vec.h"
 
 // ---------------------------------------------------------
 //  Function declarations

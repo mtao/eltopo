@@ -9,9 +9,9 @@
 #ifndef vortexsheet_project_bicgstab_h
 #define vortexsheet_project_bicgstab_h
 
-#include <blas_wrapper.h>
-#include <linear_operator.h>
-#include <krylov_solvers.h>
+#include "blas_wrapper.h"
+#include "linear_operator.h"
+#include "krylov_solvers.h"
 
 struct BiCGSTAB_Solver
 {

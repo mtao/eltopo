@@ -1,4 +1,4 @@
-#include <bfstream.h>
+#include "bfstream.h"
 
 bifstream &operator>>(bifstream &input, bool &d)
 { d=(bool)input.get(); return input; } // note: on some platforms sizeof(bool)!=1

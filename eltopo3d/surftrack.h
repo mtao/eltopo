@@ -11,13 +11,13 @@
 #ifndef EL_TOPO_SURFTRACK_H
 #define EL_TOPO_SURFTRACK_H
 
-#include <dynamicsurface.h>
-#include <edgecollapser.h>
-#include <edgeflipper.h>
-#include <edgesplitter.h>
-#include <meshmerger.h>
-#include <meshpincher.h>
-#include <meshsmoother.h>
+#include "dynamicsurface.h"
+#include "edgecollapser.h"
+#include "edgeflipper.h"
+#include "edgesplitter.h"
+#include "meshmerger.h"
+#include "meshpincher.h"
+#include "meshsmoother.h"
 
 // ---------------------------------------------------------
 //  Forwards and typedefs

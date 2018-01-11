@@ -6,7 +6,7 @@
 // Simple functions for manipulating multiprecision floating-point
 // expansions, with simplicity favoured over speed.
 
-#include <commonoptions.h>
+#include "commonoptions.h"
 #include <vector>
 
 // The basic type is essentially a vector of *increasing* and 

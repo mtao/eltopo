@@ -1,7 +1,7 @@
 #ifndef GRID3_H
 #define GRID3_H
 
-#include <vec.h>
+#include "vec.h"
 
 template<class T>
 struct Grid3

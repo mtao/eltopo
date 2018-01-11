@@ -11,10 +11,10 @@
 // Includes
 // ---------------------------------------------------------
 
-#include <subdivisionscheme.h>
+#include "subdivisionscheme.h"
 
-#include <mat.h>
-#include <surftrack.h>
+#include "../common/mat.h"
+#include "surftrack.h"
 
 // ---------------------------------------------------------
 // Global externs

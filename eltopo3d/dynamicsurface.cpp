@@ -11,21 +11,21 @@
 // Includes
 // ---------------------------------------------------------
 
-#include <dynamicsurface.h>
+#include "dynamicsurface.h"
 
-#include <broadphasegrid.h>
+#include "broadphasegrid.h"
 #include <cassert>
-#include <ccd_wrapper.h>
-#include <collisionqueries.h>
+#include "../common/ccd_wrapper.h"
+#include "../common/collisionqueries.h"
 #include <ctime>
-#include <impactzonesolver.h>
-#include <lapack_wrapper.h>
-#include <mat.h>
+#include "impactzonesolver.h"
+#include "../common/lapack_wrapper.h"
+#include "../common/mat.h"
 #include <queue>
-#include <runstats.h>
-#include <vec.h>
+#include "../common/runstats.h"
+#include "../common/vec.h"
 #include <vector>
-#include <wallclocktime.h>
+#include "../common/wallclocktime.h"
 
 
 // ---------------------------------------------------------

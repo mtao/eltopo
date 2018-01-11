@@ -1,9 +1,9 @@
 #ifndef ARRAY3_UTILS_H
 #define ARRAY3_UTILS_H
 
-#include <array3.h>
-#include <util.h>
-#include <vec.h>
+#include "array3.h"
+#include "util.h"
+#include "vec.h"
 
 template<class S, class T>
 T cubic_interpolate_value(const Vec<3,S>& point, const Array3<T, Array1<T> >& grid) 

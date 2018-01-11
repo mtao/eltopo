@@ -1,5 +1,5 @@
 
-#include <rootparitycollisiontest.h>
+#include "rootparitycollisiontest.h"
 #include <cstdlib>
 
 namespace rootparity 

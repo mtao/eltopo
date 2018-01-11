@@ -1,7 +1,7 @@
 #ifndef COLLISIONQUERIES_H
 #define COLLISIONQUERIES_H
 
-#include <vec.h>
+#include "vec.h"
 
 // 2D ====================================================================================================
 

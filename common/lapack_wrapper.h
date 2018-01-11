@@ -9,7 +9,7 @@
 #include <iostream>
 
 #ifdef __APPLE__
-#include <Accelerate/Accelerate.h>
+#include "Accelerate/Accelerate.h"
 #endif
 
 using std::max;

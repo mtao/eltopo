@@ -4,8 +4,8 @@
 // Definitions for a variety of sparse matrix formats.
 // By default everything keeps entries in sorted order, with no duplicates.
 
-#include <blas_wrapper.h>
-#include <linear_operator.h>
+#include "blas_wrapper.h"
+#include "linear_operator.h"
 #include <list>
 
 //============================================================================
