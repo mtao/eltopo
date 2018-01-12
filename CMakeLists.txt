@@ -79,17 +79,13 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funroll-loops")
+
 ADD_LIBRARY(eltopo_common STATIC ${ELTOPO_COMMON_SRC})
 ADD_LIBRARY(eltopo STATIC ${ELTOPO_SRC})
 TARGET_LINK_LIBRARIES(eltopo eltopo_common ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-
-
-if(CMAKE_BUILD_TYPE MATCHES Release)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funroll-loops")
-  set(LIBNAME "eltopo_release")
-else()
-  set(LIBNAME "eltopo_debug")
-endif()
 
 # We need C++11. Put this directive after CGAL's include.
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
