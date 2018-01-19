@@ -3,6 +3,10 @@
 
 #include <cassert>
 #include <cmath>
+#include <utility>
+#include <algorithm>
+#include <numeric>
+#include <functional>
 #include "hashtable.h"
 #include <iostream>
 #include "util.h"
@@ -20,63 +24,75 @@
 // for additional operations (such as dot-products, norms, cross-products, etc.)
 
 template<unsigned int N, class T>
-struct Vec
-{
+struct Vec {
     T v[N];
     
-    Vec<N,T>(void)
-    {}
-    
-    explicit Vec<N,T>(T value_for_all)
-    { for(unsigned int i=0; i<N; ++i) v[i]=value_for_all; }
-    
+    template <typename... Args, std::enable_if_t<sizeof...(Args) == N,int> = 0, std::enable_if_t<(std::is_convertible_v<Args,T> && ... ),int> = 0>
+    Vec(Args&&... args): v{std::forward<Args>(args)...} {}
+    Vec(void) {}
     template<class S>
-    explicit Vec<N,T>(const S *source)
-    { for(unsigned int i=0; i<N; ++i) v[i]=(T)source[i]; }
-    
+    explicit Vec(const S *source) { _assign(_is(),source); }
     template <class S>
-    explicit Vec<N,T>(const Vec<N,S>& source)
-    { for(unsigned int i=0; i<N; ++i) v[i]=(T)source[i]; }
+    explicit Vec(const Vec<N,S>& source) { _assign(_is(),source.v); }
+    explicit Vec(const T& v) { nullaryOpAssign([&v]() -> T {return v;});}
+
+    template <int... M>
+        using IS = typename std::integer_sequence<int,M...>;
+    constexpr static auto _is() { return std::make_integer_sequence<int,N>(); }
+
+
+    template <int... M, typename... Args, std::enable_if_t<sizeof...(Args) == N,int> = 0>
+    Vec& _assign(IS<M...>, Args... args) { (std::exchange(v[M],args),...); return *this; }
+    template <int... M, typename S>
+    Vec& _assign(IS<M...>, const S* s) { (std::exchange(v[M],s[M]),...); return *this; }
+
+    template <typename... Args, std::enable_if_t<sizeof...(Args) == N,int> = 0, std::enable_if_t<(std::is_convertible_v<Args,T> && ... ),int> = 0>
+    Vec& assign(Args... args) { return _assign(_is(),std::forward<Args>(args)...); }
+    template <typename S, std::enable_if_t<std::is_convertible_v<S,T>,int> = 0>
+    Vec<N,T>& assign(const Vec<N,S>& o) { return _assign(_is(),o.v);}
+
+    //template <int... M, typename UnaryOp>
+    //Vec& nullaryOpAssign(IS<M...>, UnaryOp&& op) { return _assign(op(),...); }
+    template <typename UnaryOp>
+    //Vec& nullaryOpAssign(UnaryOp&& op) { return nullaryOpAssign(_is(),std::forward<UnaryOp>(op)); }
+    Vec& nullaryOpAssign(UnaryOp&& op) { for(int i = 0; i < N; ++i) { v[i] = op(); }; return *this; }
+
+
+
+    template <int... M, typename UnaryOp>
+    Vec unaryOp(IS<M...>, UnaryOp&& op) const { return Vec(op(v[M])...); }
+    template <typename UnaryOp>
+    Vec unaryOp(UnaryOp&& op) const { return unaryOp(_is(),std::forward<UnaryOp>(op)); }
+    template <int... M, typename UnaryOp>
+    Vec& unaryOpAssign(IS<M...>, UnaryOp&& op) { return assign(op(v[M])...); }
+    template <typename UnaryOp>
+    Vec& unaryOpAssign(UnaryOp&& op) { return unaryOpAssign(_is(),std::forward<UnaryOp>(op)); }
+
+
+    template <int... M, typename BinaryOp>
+    Vec binaryOp(IS<M...>, BinaryOp&& op, const Vec& o) const { return Vec(op(v[M],o[M])...); }
+    template <typename BinaryOp>
+    Vec binaryOp(BinaryOp&& op, const Vec& o) const { return binaryOp(_is(),std::forward<BinaryOp>(op),o); }
+
+    template <int... M, typename BinaryOp>
+    Vec& binaryOpAssign(IS<M...>, BinaryOp&& op, const Vec& o) { return assign(op(v[M],o[M])...); }
+    template <typename BinaryOp>
+    Vec& binaryOpAssign(BinaryOp&& op, const Vec& o) { return binaryOpAssign(_is(),std::forward<BinaryOp>(op),o); }
+
+
+
     
-    Vec<N,T>(T v0, T v1)
-    {
-        assert(N==2);
-        v[0]=v0; v[1]=v1;
-    }
     
-    Vec<N,T>(T v0, T v1, T v2)
-    {
-        assert(N==3);
-        v[0]=v0; v[1]=v1; v[2]=v2;
-    }
     
-    Vec<N,T>(T v0, T v1, T v2, T v3)
-    {
-        assert(N==4);
-        v[0]=v0; v[1]=v1; v[2]=v2; v[3]=v3;
-    }
     
-    Vec<N,T>(T v0, T v1, T v2, T v3, T v4)
-    {
-        assert(N==5);
-        v[0]=v0; v[1]=v1; v[2]=v2; v[3]=v3; v[4]=v4;
-    }
-    
-    Vec<N,T>(T v0, T v1, T v2, T v3, T v4, T v5)
-    {
-        assert(N==6);
-        v[0]=v0; v[1]=v1; v[2]=v2; v[3]=v3; v[4]=v4; v[5]=v5;
-    }
     
     T &operator[](int index)
     {
-        assert(0<=index && (unsigned int)index<N);
         return v[index];
     }
     
     const T &operator[](int index) const
     {
-        assert(0<=index && (unsigned int)index<N);
         return v[index];
     }
     
@@ -86,77 +102,26 @@ struct Vec
         return false;
     }
     
-    Vec<N,T> operator+=(const Vec<N,T> &w)
-    {
-        for(unsigned int i=0; i<N; ++i) v[i]+=w[i];
-        return *this;
-    }
+    Vec operator+(const Vec& o) const { return binaryOp(std::plus<T>(), o); }
+    Vec& operator+=(const Vec& o) { return binaryOpAssign(std::plus<T>(), o); }
+
+    Vec operator-(const Vec& o) const { return binaryOp(std::minus<T>(), o); }
+    Vec& operator-=(const Vec& o) { return binaryOpAssign(std::minus<T>(), o); }
+
     
-    Vec<N,T> operator+(const Vec<N,T> &w) const
-    {
-        Vec<N,T> sum(*this);
-        sum+=w;
-        return sum;
-    }
+    Vec operator-(void) const { return unaryOp(std::negate<T>()); }
     
-    Vec<N,T> operator-=(const Vec<N,T> &w)
-    {
-        for(unsigned int i=0; i<N; ++i) v[i]-=w[i];
-        return *this;
-    }
+    Vec operator*(const T& s) const { return unaryOp([&s](const T& a) -> T { return s*a; }); }
+    Vec& operator*=(const T& s) { return unaryOpAssign([&s](const T& a)-> T { return s*a; }); }
+
     
-    Vec<N,T> operator-(void) const // unary minus
-    {
-        Vec<N,T> negative;
-        for(unsigned int i=0; i<N; ++i) negative.v[i]=-v[i];
-        return negative;
-    }
+    Vec operator*(const Vec& o) const { return binaryOp(std::multiplies<T>(), o); }
+
+    Vec& operator*=(const Vec& o) { return binaryOpAssign(std::multiplies<T>(), o); }
     
-    Vec<N,T> operator-(const Vec<N,T> &w) const // (binary) subtraction
-    {
-        Vec<N,T> diff(*this);
-        diff-=w;
-        return diff;
-    }
     
-    Vec<N,T> operator*=(T a)
-    {
-        for(unsigned int i=0; i<N; ++i) v[i]*=a;
-        return *this;
-    }
-    
-    Vec<N,T> operator*(T a) const
-    {
-        Vec<N,T> w(*this);
-        w*=a;
-        return w;
-    }
-    
-    Vec<N,T> operator*=(const Vec<N,T> &w)
-    {
-        for(unsigned int i=0; i<N; ++i) v[i]*=w.v[i];
-        return *this;
-    }
-    
-    Vec<N,T> operator*(const Vec<N,T> &w) const
-    {
-        Vec<N,T> componentwise_product;
-        for(unsigned int i=0; i<N; ++i) componentwise_product[i]=v[i]*w.v[i];
-        return componentwise_product;
-    }
-    
-    Vec<N,T> operator/=(T a)
-    {
-        for(unsigned int i=0; i<N; ++i) v[i]/=a;
-        return *this;
-    }
-    
-    Vec<N,T> operator/(T a) const
-    {
-        Vec<N,T> w(*this);
-        w/=a;
-        return w;
-    }
+    Vec operator/(const T& s) const { return unaryOp([&s](const T& a)-> T { return a/s; }); }
+    Vec& operator/=(const T& s) { return unaryOpAssign([&s](const T& a)-> T { return a/s; }); }
 };
 
 typedef Vec<2,double>         Vec2d;
@@ -291,49 +256,37 @@ inline bool operator!=(const Vec<N,T> &a, const Vec<N,T> &b)
 template<unsigned int N, class T>
 inline Vec<N,T> operator*(T a, const Vec<N,T> &v)
 {
-    Vec<N,T> w(v);
-    w*=a;
-    return w;
+    return v.unaryOp([&a](const T& v)-> T { return a*v; });
 }
 
 template<unsigned int N, class T>
 inline T min(const Vec<N,T> &a)
 {
-    T m=a.v[0];
-    for(unsigned int i=1; i<N; ++i) if(a.v[i]<m) m=a.v[i];
-    return m;
+    return std::min_element(a.v,a.v+N);
 }
 
 template<unsigned int N, class T>
 inline Vec<N,T> min_union(const Vec<N,T> &a, const Vec<N,T> &b)
 {
-    Vec<N,T> m;
-    for(unsigned int i=0; i<N; ++i) (a.v[i] < b.v[i]) ? m.v[i]=a.v[i] : m.v[i]=b.v[i];
-    return m;
+    return b.binaryOp([](const T& a, const T& b) -> T{ return std::min(a,b); },a);
 }
 
 template<unsigned int N, class T>
 inline Vec<N,T> max_union(const Vec<N,T> &a, const Vec<N,T> &b)
 {
-    Vec<N,T> m;
-    for(unsigned int i=0; i<N; ++i) (a.v[i] > b.v[i]) ? m.v[i]=a.v[i] : m.v[i]=b.v[i];
-    return m;
+    return b.binaryOp([](const T& a, const T& b) -> T { return std::max(a,b); },a);
 }
 
 template<unsigned int N, class T>
 inline T max(const Vec<N,T> &a)
 {
-    T m=a.v[0];
-    for(unsigned int i=1; i<N; ++i) if(a.v[i]>m) m=a.v[i];
-    return m;
+    return std::max_element(a.v,a.v+N);
 }
 
 template<unsigned int N, class T>
 inline T dot(const Vec<N,T> &a, const Vec<N,T> &b)
 {
-    T d=a.v[0]*b.v[0];
-    for(unsigned int i=1; i<N; ++i) d+=a.v[i]*b.v[i];
-    return d;
+    return std::inner_product(a.v,a.v+N,b.v,T{0});
 }
 
 template<class T> 
