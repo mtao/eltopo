@@ -55,7 +55,7 @@ struct Vec {
     //Vec& nullaryOpAssign(IS<M...>, UnaryOp&& op) { return _assign(op(),...); }
     template <typename UnaryOp>
     //Vec& nullaryOpAssign(UnaryOp&& op) { return nullaryOpAssign(_is(),std::forward<UnaryOp>(op)); }
-    Vec& nullaryOpAssign(UnaryOp&& op) { for(int i = 0; i < N; ++i) { v[i] = op(); }; return *this; }
+    Vec& nullaryOpAssign(UnaryOp&& op) { for(unsigned int i = 0; i < N; ++i) { v[i] = op(); }; return *this; }
 
 
 
@@ -80,6 +80,25 @@ struct Vec {
     Vec& binaryOpAssign(BinaryOp&& op, const Vec& o) { return binaryOpAssign(_is(),std::forward<BinaryOp>(op),o); }
 
 
+    T dot(const Vec &b) const { return std::inner_product(v,v+N,b.v,T{0}); }
+
+    T normSquared() const { return this->dot(*this); }
+    T norm() const { return std::sqrt(this->normSquared()); }
+
+    template<int... M> 
+        inline T infnorm(IS<M...>) { 
+            return ( std::abs(v[M]) + ... );
+        }
+    T infnorm(const Vec &a) {  return infnorm(_is(),a); }
+
+    template <int... M>
+        T distSquared(IS<M...>, const Vec &b) const { 
+            return ( sqr(v[M]-b.v[M]) + ... );
+        }
+    T distSquared(const Vec<N,T> &b) const {  return distSquared(Vec<N,T>::_is(),b); }
+
+    void normalize() { *this /= this->norm(); }
+    Vec normalized() const { return *this / this->norm(); }
 
     
     
@@ -96,11 +115,9 @@ struct Vec {
         return v[index];
     }
     
-    bool nonzero(void) const
-    {
-        for(unsigned int i=0; i<N; ++i) if(v[i]) return true;
-        return false;
-    }
+    template <int... M>
+    bool nonzero(IS<M...>) const { return (std::equal_to(v[M],0) && ...); }
+    bool nonzero(void) const {return binaryOp(_is());}
     
     Vec operator+(const Vec& o) const { return binaryOp(std::plus<T>(), o); }
     Vec& operator+=(const Vec& o) { return binaryOpAssign(std::plus<T>(), o); }
@@ -165,50 +182,31 @@ typedef Vec<6,unsigned char>  Vec6uc;
 
 
 template<unsigned int N, class T>
-T mag2(const Vec<N,T> &a)
-{
-    T l=sqr(a.v[0]);
-    for(unsigned int i=1; i<N; ++i) l+=sqr(a.v[i]);
-    return l;
-}
+inline T dot(const Vec<N,T> &a, const Vec<N,T> &b) { return a.dot(b); }
+template<unsigned int N, class T>
+T mag2(const Vec<N,T> &a) { return a.normSquared(); }
 
 template<unsigned int N, class T>
-T mag(const Vec<N,T> &a)
-{ return (T)sqrt(mag2(a)); }
+T mag(const Vec<N,T> &a) { return a.norm(); }
 
 template<unsigned int N, class T> 
-inline T dist2(const Vec<N,T> &a, const Vec<N,T> &b)
-{ 
-    T d=sqr(a.v[0]-b.v[0]);
-    for(unsigned int i=1; i<N; ++i) d+=sqr(a.v[i]-b.v[i]);
-    return d;
-}
+inline T dist2(const Vec<N,T> &a, const Vec<N,T> &b) {  return a.distSquared(b); }
 
 template<unsigned int N, class T> 
-inline T dist(const Vec<N,T> &a, const Vec<N,T> &b)
-{ return std::sqrt(dist2(a,b)); }
+inline T dist(const Vec<N,T> &a, const Vec<N,T> &b) { return std::sqrt(dist2(a,b)); }
 
 template<unsigned int N, class T> 
-inline void normalize(Vec<N,T> &a)
-{ a/=mag(a); }
+inline void normalize(Vec<N,T> &a) { a.normalize(); }
 
 template<unsigned int N, class T> 
-inline Vec<N,T> normalized(const Vec<N,T> &a)
-{ return a/mag(a); }
+inline Vec<N,T> normalized(const Vec<N,T> &a) { return a.normalized(); }
 
 template<unsigned int N, class T> 
-inline T infnorm(const Vec<N,T> &a)
-{
-    T d=std::fabs(a.v[0]);
-    for(unsigned int i=1; i<N; ++i) d=max(std::fabs(a.v[i]),d);
-    return d;
-}
+inline T infnorm(const Vec<N,T> &a) {  return a.infnorm(); }
 
 template<unsigned int N, class T>
-void zero(Vec<N,T> &a)
-{ 
-    for(unsigned int i=0; i<N; ++i)
-        a.v[i] = 0;
+void zero(Vec<N,T> &a) { 
+    std::fill(a.v,a.v+N,0);
 }
 
 template<unsigned int N, class T>
@@ -283,11 +281,6 @@ inline T max(const Vec<N,T> &a)
     return std::max_element(a.v,a.v+N);
 }
 
-template<unsigned int N, class T>
-inline T dot(const Vec<N,T> &a, const Vec<N,T> &b)
-{
-    return std::inner_product(a.v,a.v+N,b.v,T{0});
-}
 
 template<class T> 
 inline Vec<2,T> rotate(const Vec<2,T>& a, const T& angle) 
