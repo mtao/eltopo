@@ -28,6 +28,12 @@ class ElTopoTracker {
         void improve();
         double integrate(const CRefCV3d& Vnew, double dt);
         double step(const CRefCV3d& Vnew, double dt);
+        double integrate_py(const Eigen::Ref<const Eigen::MatrixXd>& Vnew, double dt) {
+            return integrate(Vnew,dt);
+        }
+        double step_py(const Eigen::Ref<const Eigen::MatrixXd>& Vnew, double dt) {
+            return step(Vnew,dt);
+        }
 
 
         std::tuple<ColVectors3d,ColVectors3i> get_mesh() const;
@@ -42,3 +48,4 @@ class ElTopoTracker {
         std::unique_ptr<SubdivisionScheme> m_subdivision_scheme;
 
 };
+ElTopoTracker make_tracker(const Eigen::Ref<const Eigen::MatrixXd>& V, const Eigen::Ref<const Eigen::MatrixXi>& F, bool defrag_mesh = true);
