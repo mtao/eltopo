@@ -7,7 +7,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -Wextra -Wno-reorder -Wno-unknown-pragmas -march=native" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -g -Wall -Wextra -Wno-reorder -Wno-unknown-pragmas -march=native" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 
@@ -112,4 +112,24 @@ SET(TALPA_SRC
 ADD_EXECUTABLE(talpa ${TALPA_SRC})
 TARGET_INCLUDE_DIRECTORIES(talpa PUBLIC talpa talpa/drivers talpa/curlnoise)
 TARGET_LINK_LIBRARIES(talpa eltopo)
+
+
+
+SET(PYBIND11_CPP_STANDARD -std=c++1z)
+
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/extern/pybind11)
+
+#ADD_LIBRARY(pyeltopo MODULE pyeltopo/main.cpp
+#    pyeltopo/eltopo.cpp)
+PYBIND11_ADD_MODULE(pyeltopo pyeltopo/main.cpp
+    pyeltopo/eltopo.cpp)
+
+TARGET_INCLUDE_DIRECTORIES(pyeltopo PRIVATE .)
+TARGET_INCLUDE_DIRECTORIES(pyeltopo PRIVATE /usr/include/eigen3)
+TARGET_INCLUDE_DIRECTORIES(pyeltopo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extern/core/include)
+
+target_link_libraries(pyeltopo PRIVATE eltopo)
+#target_link_libraries(pyeltopo PRIVATE pybind11::module eltopo)
+#set_target_properties(pyeltopo PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
+#                                         SUFFIX "${PYTHON_MODULE_EXTENSION}")
 
