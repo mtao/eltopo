@@ -22,7 +22,11 @@ class ElTopoTracker {
         using CRefCV3i = Eigen::Ref<const ColVectors3i>;
         ElTopoTracker& operator=(ElTopoTracker&&) = default;
         ~ElTopoTracker();
-        ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh = true);
+        ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh = true, bool verbose = false);
+
+        void split_edge(size_t edge_index);
+        //split_triangle splits by the longest edge
+        void split_triangle(size_t triangle_index);
 
         void initialize();
         void improve();
@@ -35,6 +39,7 @@ class ElTopoTracker {
             return step(Vnew,dt);
         }
 
+        void defrag_mesh();
 
         std::tuple<ColVectors3d,ColVectors3i> get_mesh() const;
 
@@ -43,8 +48,11 @@ class ElTopoTracker {
         ColVectors3d get_vertices() const;
         ColVectors3i get_triangles() const;
     private:
-        SurfTrack* m_surf = nullptr;
+        std::unique_ptr<SurfTrack> m_surf = nullptr;
         SurfTrackInitializationParameters m_init_params;
         std::unique_ptr<SubdivisionScheme> m_subdivision_scheme;
+        bool m_defrag_mesh = false;
+        bool m_defrag_dirty = false;
+        bool m_verbose = false;
 
 };

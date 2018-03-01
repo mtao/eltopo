@@ -119,6 +119,7 @@ SET(PYBIND11_CPP_STANDARD -std=c++1z)
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/extern/pybind11)
 
+
 #ADD_LIBRARY(pyeltopo MODULE pyeltopo/main.cpp
 #    pyeltopo/eltopo.cpp)
 PYBIND11_ADD_MODULE(pyeltopo pyeltopo/main.cpp
@@ -133,3 +134,13 @@ target_link_libraries(pyeltopo PRIVATE eltopo)
 #set_target_properties(pyeltopo PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
 #                                         SUFFIX "${PYTHON_MODULE_EXTENSION}")
 
+MESSAGE(STATUS "Pyexec: ${PYTHON_EXECUTABLE}")
+
+EXECUTE_PROCESS(
+    COMMAND "${PYTHON_EXECUTABLE}" -m site --user-site
+    OUTPUT_VARIABLE PYTHON_SITE
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+MESSAGE(STATUS "Pysites: ${PYTHON_SITE}")
+
+MESSAGE(STATUS "TARGETS pyeltopo LIBRARY DESTINATION ${PYTHON_SITE}")
+INSTALL(TARGETS pyeltopo LIBRARY DESTINATION ${PYTHON_SITE})
