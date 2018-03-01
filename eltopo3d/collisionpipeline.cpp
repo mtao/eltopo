@@ -1642,7 +1642,7 @@ bool CollisionPipeline::check_triangle_vs_all_triangles_for_intersection( const 
             check_edge_triangle_intersection_by_index( tri[0], tri[1],
                                                       curr_tri[0], curr_tri[1], curr_tri[2],
                                                       m_surface.get_positions(),
-                                                      true );
+                                                      m_surface.m_verbose );
             
             any_intersection = true;
         }
@@ -1669,7 +1669,7 @@ bool CollisionPipeline::check_triangle_vs_all_triangles_for_intersection( const 
             check_edge_triangle_intersection_by_index( tri[1], tri[2],
                                                       curr_tri[0], curr_tri[1], curr_tri[2],
                                                       m_surface.get_positions(),
-                                                      true );
+                                                      m_surface.m_verbose );
             
             any_intersection = true;
         }
@@ -1696,7 +1696,7 @@ bool CollisionPipeline::check_triangle_vs_all_triangles_for_intersection( const 
             check_edge_triangle_intersection_by_index( tri[2], tri[0],
                                                       curr_tri[0], curr_tri[1], curr_tri[2],
                                                       m_surface.get_positions(),
-                                                      true );
+                                                      m_surface.m_verbose );
             
             any_intersection = true;         
         }
@@ -1853,7 +1853,7 @@ void CollisionPipeline::assert_mesh_is_intersection_free( bool degeneracy_counts
                                       m_surface.get_position(triangle[0]), triangle[0],
                                       m_surface.get_position(triangle[1]), triangle[1], 
                                       m_surface.get_position(triangle[2]), triangle[2],
-                                      true, true );
+                                      degeneracy_counts_as_intersection , m_surface.m_verbose);
         
         assert( false );
         
@@ -1892,7 +1892,7 @@ void CollisionPipeline::assert_predicted_mesh_is_intersection_free( bool degener
                                       m_surface.get_position(triangle[0]), triangle[0],
                                       m_surface.get_position(triangle[1]), triangle[1], 
                                       m_surface.get_position(triangle[2]), triangle[2],
-                                      true, true );
+                                      degeneracy_counts_as_intersection , m_surface.m_verbose);
         
         const Vec3d& ea = m_surface.get_position(edge[0]);
         const Vec3d& eb = m_surface.get_position(edge[1]);

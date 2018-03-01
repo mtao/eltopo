@@ -8,8 +8,9 @@
 
 
 
-ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh) {
+ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh, bool verbose): m_defrag_mesh(defrag_mesh), m_verbose(verbose) {
 
+    if(m_verbose) std::cout << "Starting constructor!" << std::endl;
 
     m_init_params.m_use_fraction = true;
     m_init_params.m_min_edge_length = .5;
@@ -29,55 +30,65 @@ ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_m
 
     m_subdivision_scheme.reset(new ButterflyScheme());
     m_init_params.m_subdivision_scheme=m_subdivision_scheme.get();
+    if(m_verbose) std::cout << "Made initial parameters" << std::endl;
 
 
     std::vector<Vec3st> tris(F.cols());
     std::vector<Vec3d> verts(V.cols());
     std::vector<double> masses(V.cols());
 
-    for(int i = 0; i < verts.size(); ++i) {
+    for(size_t i = 0; i < verts.size(); ++i) {
         Eigen::Map<mtao::Vector<double,3>> v(&verts[i][0]);
         v = V.col(i);
     }
-    for(int i = 0; i < tris.size(); ++i) {
+    for(size_t i = 0; i < tris.size(); ++i) {
         Eigen::Map<mtao::Vector<size_t,3>> t(&tris[i][0]);
             t = F.col(i).cast<size_t>();
     }
 
-    Eigen::Map<mtao::VectorX<double>>(masses.data(),V.cols()) = mtao::geometry::dual_volumes(V,F);
+    if(m_verbose) std::cout << "Making volumes!" << std::endl;
 
+    auto dv = mtao::geometry::dual_volumes(V,F);
+    Eigen::Map<mtao::VectorX<double>>(masses.data(),masses.size()) = dv;
 
-    m_surf = new SurfTrack(verts,tris,masses,m_init_params);
+    if(m_verbose) std::cout << "Making surface!" << std::endl;
 
+    m_surf = std::make_unique<SurfTrack>(verts,tris,masses,m_init_params);
 
-    if(defrag_mesh) {
-        m_surf->defrag_mesh();
-    }
+    if(m_verbose) std::cout << "Defrag time!" << std::endl;
 
+    if(m_defrag_mesh) this->defrag_mesh();
+
+    if(m_verbose) std::cout << "Collision safety?" << std::endl;
 
     if ( m_surf->m_collision_safety )
     {
         m_surf->m_collision_pipeline.assert_mesh_is_intersection_free( false );      
     }
+    if(m_verbose) std::cout << "Finished constructor!" << std::endl;
 
 }
 
 ElTopoTracker::~ElTopoTracker() {
-    if(m_surf) {
-        delete m_surf;
-    }
 }
 
 auto ElTopoTracker::get_mesh() const -> std::tuple<ColVectors3d,ColVectors3i>{
     assert(m_surf);
+    if(m_defrag_mesh && m_defrag_dirty) {
+
+        const_cast<ElTopoTracker*>(this)->defrag_mesh();
+    }
     return {get_vertices(),get_triangles()};
 }
 auto ElTopoTracker::get_vertices() const ->ColVectors3d {
     assert(m_surf);
+    if(m_defrag_mesh && m_defrag_dirty) {
+        const_cast<ElTopoTracker*>(this)->defrag_mesh();
+    }
     auto&& pos = m_surf->get_positions();
     assert(pos.size() == m_surf->get_num_vertices());
     ColVectors3d V(3,pos.size());
-    for(int i = 0; i < pos.size(); ++i) {
+    for(size_t i = 0; i < pos.size(); ++i) {
         V.col(i) = Eigen::Map<const mtao::Vector<double,3>>(&pos[i][0]);
     }
     return V;
@@ -86,7 +97,7 @@ auto ElTopoTracker::get_triangles() const -> ColVectors3i {
     assert(m_surf);
     auto&& tris = m_surf->m_mesh.get_triangles();
     ColVectors3i F(3,tris.size());
-    for(int i = 0; i < tris.size(); ++i) {
+    for(size_t i = 0; i < tris.size(); ++i) {
         auto& t = tris[i];
         F.col(i) = Eigen::Map<const mtao::Vector<size_t,3>>(&t[0]).cast<int>();
     }
@@ -94,6 +105,10 @@ auto ElTopoTracker::get_triangles() const -> ColVectors3i {
     return F;
 }
 
+void ElTopoTracker::defrag_mesh() {
+    assert(m_surf);
+    m_surf->defrag_mesh();
+}
 
 void ElTopoTracker::improve() {
     assert(m_surf);
@@ -101,7 +116,7 @@ void ElTopoTracker::improve() {
     m_surf->improve_mesh();
     // Topology changes
     m_surf->topology_changes();
-    m_surf->defrag_mesh();
+    if(m_defrag_mesh) defrag_mesh();
 }
 
 
@@ -116,7 +131,7 @@ double ElTopoTracker::integrate(const CRefCV3d& V, double dt) {
 
     double ret_dt;
     std::vector<Vec3d> verts(V.cols());
-    for(int i = 0; i < verts.size(); ++i) {
+    for(size_t i = 0; i < verts.size(); ++i) {
         Eigen::Map<mtao::Vector<double,3>> v(&verts[i][0]);
         v = V.col(i);
     }
@@ -128,6 +143,31 @@ double ElTopoTracker::integrate(const CRefCV3d& V, double dt) {
 
 }
 
+void ElTopoTracker::split_edge(size_t edge_index) {
+    assert(m_surf);
+    auto&& splitter = m_surf->m_splitter;
+    if(splitter.edge_is_splittable(edge_index)) {
+        std::cout << "Splitting edge: " << edge_index << std::endl;
+        splitter.split_edge(edge_index);
+        m_defrag_dirty = true;
+    }
+}
+void ElTopoTracker::split_triangle(size_t triangle_index) {
+    auto&& edges = m_surf->m_mesh.m_triangle_to_edge_map[triangle_index];
+    Vec3d lens;
+    for(int i = 0; i < 3; ++i) {
+        lens[i] = m_surf->get_edge_length(edges[i]);
+    }
+    int mc = 0;
+    for(int i = 1; i < 3; ++i) {
+        if(lens[i] > lens[mc]) {
+            mc = i;
+        }
+    }
+
+    split_edge(edges[mc]);
+
+}
 
 ElTopoTracker make_tracker(const Eigen::Ref<const Eigen::MatrixXd>& V, const Eigen::Ref<const Eigen::MatrixXi>& F, bool defrag_mesh) {
     return ElTopoTracker(V,F,defrag_mesh);
