@@ -48,4 +48,3 @@ class ElTopoTracker {
         std::unique_ptr<SubdivisionScheme> m_subdivision_scheme;
 
 };
-ElTopoTracker make_tracker(const Eigen::Ref<const Eigen::MatrixXd>& V, const Eigen::Ref<const Eigen::MatrixXi>& F, bool defrag_mesh = true);

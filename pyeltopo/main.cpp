@@ -22,7 +22,6 @@ PYBIND11_MODULE(pyeltopo, m) {
         .def("integrate",&ElTopoTracker::integrate_py)
         .def("improve",&ElTopoTracker::improve)
         .def("step",&ElTopoTracker::step_py);
-    m.def("make_tracker",[](py::EigenDRef<Eigen::MatrixXd>& a, py::EigenDRef<Eigen::MatrixXi>& b) {return make_tracker(a,b); });
 }
 
 

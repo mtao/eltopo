@@ -70,7 +70,7 @@ ElTopoTracker::~ElTopoTracker() {
 
 auto ElTopoTracker::get_mesh() const -> std::tuple<ColVectors3d,ColVectors3i>{
     assert(m_surf);
-    return {get_vertices(),get_triangles()};
+    return std::make_tuple(get_vertices(),get_triangles());
 }
 auto ElTopoTracker::get_vertices() const ->ColVectors3d {
     assert(m_surf);
@@ -128,7 +128,3 @@ double ElTopoTracker::integrate(const CRefCV3d& V, double dt) {
 
 }
 
-
-ElTopoTracker make_tracker(const Eigen::Ref<const Eigen::MatrixXd>& V, const Eigen::Ref<const Eigen::MatrixXi>& F, bool defrag_mesh) {
-    return ElTopoTracker(V,F,defrag_mesh);
-}
