@@ -16,7 +16,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(pyeltopo, m) {
     py::class_<ElTopoTracker>(m, "ElTopoTracker")
-        .def(py::init<const ElTopoTracker::CRefCV3d&, const ElTopoTracker::CRefCV3i&>())
+        //.def(py::init<const ElTopoTracker::CRefCV3d&, const ElTopoTracker::CRefCV3i&>())
+        .def(py::init<const ElTopoTracker::CRefCV3d&, const ElTopoTracker::CRefCV3i&,bool>())
         //.def(py::init<const ElTopoTracker::CRefCV3d&, const ElTopoTracker::CRefCV3i&,bool,bool>())
         .def("get_triangles",&ElTopoTracker::get_triangles)
         .def("get_vertices",&ElTopoTracker::get_vertices)

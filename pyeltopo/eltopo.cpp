@@ -8,7 +8,7 @@
 
 
 
-ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh, bool verbose): m_defrag_mesh(defrag_mesh), m_verbose(verbose) {
+ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool collision_safety, bool defrag_mesh, bool verbose): m_defrag_mesh(defrag_mesh), m_verbose(verbose) {
 
     if(m_verbose) std::cout << "Starting constructor!" << std::endl;
 
@@ -25,7 +25,7 @@ ElTopoTracker::ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_m
     m_init_params.m_perform_improvement=true;
     m_init_params.m_allow_topology_changes=false;
     m_init_params.m_allow_non_manifold=false;
-    m_init_params.m_collision_safety=true;
+    m_init_params.m_collision_safety=collision_safety;
 
 
     m_subdivision_scheme.reset(new ButterflyScheme());

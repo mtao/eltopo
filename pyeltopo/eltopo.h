@@ -22,7 +22,7 @@ class ElTopoTracker {
         using CRefCV3i = Eigen::Ref<const ColVectors3i>;
         ElTopoTracker& operator=(ElTopoTracker&&) = default;
         ~ElTopoTracker();
-        ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool defrag_mesh = true, bool verbose = false);
+        ElTopoTracker(const CRefCV3d& V, const CRefCV3i& F, bool collision_safety=true, bool defrag_mesh = true, bool verbose = false);
 
         void split_edge(size_t edge_index);
         //split_triangle splits by the longest edge
