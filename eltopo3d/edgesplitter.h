@@ -111,6 +111,9 @@ public:
     /// Maximum edge length.  Edges longer than this will be subdivided.
     double m_max_edge_length;   
     bool edge_is_splittable( size_t edge_index ) const;
+    /// Split an edge, using subdivision_scheme to determine the new vertex location, if safe to do so.
+    ///
+    bool split_edge( size_t edge );
     
 private:
     
@@ -137,9 +140,6 @@ private:
                                                           size_t vertex_d );
     
     
-    /// Split an edge, using subdivision_scheme to determine the new vertex location, if safe to do so.
-    ///
-    bool split_edge( size_t edge );
     
     bool large_angle_split_pass();
 

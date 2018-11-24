@@ -77,6 +77,7 @@ public:
     double m_min_curvature_multiplier;
     
     bool edge_is_collapsible( size_t edge_index ) const;
+    bool collapse_edge( size_t edge );
     
 private:
     
@@ -112,7 +113,6 @@ private:
                                             size_t edge_index, 
                                             const Vec3d& vertex_new_position );
     
-    bool collapse_edge( size_t edge );
     
     
     ///
