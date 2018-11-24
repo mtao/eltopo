@@ -805,7 +805,7 @@ bool EdgeCollapser::collapse_edge( size_t edge )
 ///
 // --------------------------------------------------------
 
-bool EdgeCollapser::edge_is_collapsible( size_t edge_index )
+bool EdgeCollapser::edge_is_collapsible( size_t edge_index ) const
 {
     
     // skip deleted and solid edges

@@ -76,12 +76,12 @@ public:
     bool m_use_curvature;
     double m_min_curvature_multiplier;
     
+    bool edge_is_collapsible( size_t edge_index ) const;
     
 private:
     
     friend class SurfTrack;
     
-    bool edge_is_collapsible( size_t edge_index );
     
     void get_moving_triangles( size_t source_vertex, 
                               size_t destination_vertex, 
