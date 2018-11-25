@@ -12,11 +12,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 
 OPTION(GUI_ENABLED "USE GUI" OFF)
+OPTION(SOLVERS_ENABLED "USE SOLVERS" OFF)
+
+SET(SOLVERS_SRC
+    common/newsparse/sparse_matrix.cpp
+    common/newsparse/krylov_solvers.cpp
+    )
 
 # Common
 SET(ELTOPO_COMMON_SRC common/wallclocktime.cpp
-    common/newsparse/sparse_matrix.cpp
-    common/newsparse/krylov_solvers.cpp
 
     common/tunicate/expansion.cpp common/tunicate/intersection.cpp common/tunicate/neg.cpp
     common/tunicate/orientation.cpp
@@ -25,6 +29,14 @@ SET(ELTOPO_COMMON_SRC common/wallclocktime.cpp
     common/bfstream.cpp common/makelevelset3.cpp common/marching_tiles_hires.cpp
     common/runstats.cpp 
     )
+IF(SOLVERS_ENABLED)
+    FIND_PACKAGE(BLAS REQUIRED)
+    FIND_PACKAGE(LAPACK REQUIRED)
+
+    include_directories(${BLAS_INCLUDE_DIR})
+    include_directories(${LAPACK_INCLUDE_DIR})
+    SET(ELTOPO_COMMON_SRC ${ELTOPO_COMMON_SRC} ${SOLVERS_SRC})
+ENDIF(SOLVERS_ENABLED)
 # Source files
 SET(ELTOPO_SRC 
     eltopo3d/accelerationgrid.cpp 
@@ -65,11 +77,6 @@ INCLUDE_DIRECTORIES(eltopo3d
     ${CMAKE_CURRENT_SOURCE_DIR}/common/meshes 
     ${CMAKE_CURRENT_SOURCE_DIR}/common/tunicate)
 
-FIND_PACKAGE(BLAS REQUIRED)
-FIND_PACKAGE(LAPACK REQUIRED)
-
-include_directories(${BLAS_INCLUDE_DIR})
-include_directories(${LAPACK_INCLUDE_DIR})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   add_definitions(-DUSE_FORTRAN_BLAS)
@@ -109,7 +116,7 @@ SET(TALPA_SRC
     talpa/main.cpp
     )
 
-ADD_EXECUTABLE(talpa ${TALPA_SRC})
+ADD_EXECUTABLE(talpa EXCLUDE_FROM_ALL ${TALPA_SRC})
 TARGET_INCLUDE_DIRECTORIES(talpa PUBLIC talpa talpa/drivers talpa/curlnoise)
 TARGET_LINK_LIBRARIES(talpa eltopo)
 
