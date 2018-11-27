@@ -79,6 +79,11 @@ struct Vec {
     template <typename BinaryOp>
     Vec& binaryOpAssign(BinaryOp&& op, const Vec& o) { return binaryOpAssign(_is(),std::forward<BinaryOp>(op),o); }
 
+   explicit operator bool(void) const
+   {
+      for(unsigned int i=0; i<N; ++i) if(v[i]) return true;
+      return false;
+   }
 
     T dot(const Vec &b) const { return std::inner_product(v,v+N,b.v,T{0}); }
 
@@ -343,28 +348,28 @@ inline unsigned int hash(const Vec<N,T> &a)
 template<unsigned int N, class T>
 inline void assign(const Vec<N,T> &a, T &a0, T &a1)
 { 
-    assert(N==2);
+    static_assert(N==2);
     a0=a.v[0]; a1=a.v[1];
 }
 
 template<unsigned int N, class T>
 inline void assign(const Vec<N,T> &a, T &a0, T &a1, T &a2)
 { 
-    assert(N==3);
+    static_assert(N==3);
     a0=a.v[0]; a1=a.v[1]; a2=a.v[2];
 }
 
 template<unsigned int N, class T>
 inline void assign(const Vec<N,T> &a, T &a0, T &a1, T &a2, T &a3)
 { 
-    assert(N==4);
+    static_assert(N==4);
     a0=a.v[0]; a1=a.v[1]; a2=a.v[2]; a3=a.v[3];
 }
 
 template<unsigned int N, class T>
 inline void assign(const Vec<N,T> &a, T &a0, T &a1, T &a2, T &a3, T &a4, T &a5)
 { 
-    assert(N==6);
+    static_assert(N==6);
     a0=a.v[0]; a1=a.v[1]; a2=a.v[2]; a3=a.v[3]; a4=a.v[4]; a5=a.v[5];
 }
 
