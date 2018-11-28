@@ -20,14 +20,28 @@ SET(SOLVERS_SRC
     )
 
 # Common
-SET(ELTOPO_COMMON_SRC common/wallclocktime.cpp
-
-    common/tunicate/expansion.cpp common/tunicate/intersection.cpp common/tunicate/neg.cpp
+SET(ELTOPO_COMMON_SRC
+    common/bfstream.cpp
+    common/collisionqueries.cpp
+    common/cubic_ccd_wrapper.cpp
+    common/fileio.cpp
+    common/levelset.cpp
+    common/makelevelset2.cpp
+    common/makelevelset3.cpp
+    common/marching_tiles_hires.cpp
+    common/marching_triangles.cpp
+    common/root_parity_ccd_wrapper.cpp
+    common/runstats.cpp
+    common/wallclocktime.cpp
+    common/tunicate/expansion.cpp
+    common/tunicate/intersection.cpp
+    common/tunicate/interval.cpp
+    common/tunicate/neg.cpp
     common/tunicate/orientation.cpp
-
-    common/root_parity_ccd_wrapper.cpp common/cubic_ccd_wrapper.cpp common/collisionqueries.cpp
-    common/bfstream.cpp common/makelevelset3.cpp common/marching_tiles_hires.cpp
-    common/runstats.cpp 
+    common/tunicate/rootparitycollisiontest.cpp
+    common/newsparse/dense_matrix.cpp
+    common/newsparse/krylov_solvers.cpp
+    common/newsparse/sparse_matrix.cpp
     )
 IF(SOLVERS_ENABLED)
     FIND_PACKAGE(BLAS REQUIRED)
@@ -51,7 +65,6 @@ SET(ELTOPO_SRC
     eltopo3d/meshmerger.cpp 
     eltopo3d/meshpincher.cpp 
     eltopo3d/meshsmoother.cpp
-    eltopo3d/meshrenderer.cpp 
     eltopo3d/nondestructivetrimesh.cpp 
     eltopo3d/subdivisionscheme.cpp 
     eltopo3d/surftrack.cpp
@@ -65,6 +78,12 @@ FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(GLUT REQUIRED)
 INCLUDE_DIRECTORIES( ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} )
 ADD_DEFINITIONS(-DUSE_GUI)
+
+SET(ELTOPO_COMMON_SRC ${ELTOPO_COMMON_SRC} common/gluvi.cpp)
+SET(ELTOPO_SRC 
+    eltopo3d/meshrenderer.cpp 
+    )
+
 ELSE(GUI_ENABLED)
 ADD_DEFINITIONS(-DNO_GUI)
 SET(OPENGL_LIBRARIES )
