@@ -18,6 +18,7 @@
 #include "meshmerger.h"
 #include "meshpincher.h"
 #include "meshsmoother.h"
+#include <memory>
 
 // ---------------------------------------------------------
 //  Forwards and typedefs
@@ -85,7 +86,7 @@ struct SurfTrackInitializationParameters
     double m_merge_proximity_epsilon;
     
     /// Type of subdivision to use when collapsing or splitting (butterfly, quadric error minimization, etc.)
-    SubdivisionScheme *m_subdivision_scheme;   
+    std::shared_ptr<SubdivisionScheme> m_subdivision_scheme;   
     
     /// Whether to enforce collision-free surfaces (including during mesh maintenance operations)
     bool m_collision_safety;
