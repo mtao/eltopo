@@ -202,7 +202,6 @@ public:
               const SurfTrackInitializationParameters& initial_parameters );
     
     
-    ~SurfTrack();
     
 private:
     
@@ -299,10 +298,8 @@ public:
     double m_max_triangle_angle;
     
     /// Interpolation scheme, determines edge midpoint location
-    SubdivisionScheme *m_subdivision_scheme;
+    std::shared_ptr<SubdivisionScheme> m_subdivision_scheme;
     
-    /// If we allocate our own SubdivisionScheme object, we must delete it in this object's deconstructor.
-    bool should_delete_subdivision_scheme_object;
     
     /// Triangles which are involved in connectivity changes which may introduce degeneracies
     std::vector<size_t> m_dirty_triangles;

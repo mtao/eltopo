@@ -747,7 +747,7 @@ struct WrapArray1
     const_reverse_iterator rend(void) const
     { return const_reverse_iterator(begin()); }
     
-    void reserve(unsigned long r)
+    void reserve(unsigned long)
     { assert(r<=max_n); }
     
     void resize(unsigned long n_)

@@ -78,7 +78,7 @@ SurfTrackInitializationParameters::SurfTrackInitializationParameters() :
     m_allow_vertex_movement( true ),
     m_edge_flip_min_length_change( 1e-8 ),
     m_merge_proximity_epsilon( 1e-5 ),
-    m_subdivision_scheme(NULL),
+    m_subdivision_scheme(nullptr),
     m_collision_safety(true),
     m_allow_topology_changes(true),
     m_allow_non_manifold(true),
@@ -118,7 +118,6 @@ SurfTrack::SurfTrack( const std::vector<Vec3d>& vs,
     m_min_triangle_angle( initial_parameters.m_min_triangle_angle ),
     m_max_triangle_angle( initial_parameters.m_max_triangle_angle ),
     m_subdivision_scheme( initial_parameters.m_subdivision_scheme ),
-    should_delete_subdivision_scheme_object( m_subdivision_scheme == NULL ? true : false ),
     m_dirty_triangles(0),   
     m_allow_topology_changes( initial_parameters.m_allow_topology_changes ),
     m_allow_non_manifold( initial_parameters.m_allow_non_manifold ),
@@ -171,14 +170,9 @@ SurfTrack::SurfTrack( const std::vector<Vec3d>& vs,
         std::cout << "m_max_volume_change: " << m_max_volume_change << std::endl;
     }
     
-    if ( m_subdivision_scheme == NULL )
+    if ( !m_subdivision_scheme )
     {
-        m_subdivision_scheme = new MidpointScheme();
-        should_delete_subdivision_scheme_object = true;
-    }
-    else
-    {
-        should_delete_subdivision_scheme_object = false;
+        m_subdivision_scheme.reset(new MidpointScheme());
     }
     
     if ( false == m_allow_topology_changes )
@@ -194,19 +188,6 @@ SurfTrack::SurfTrack( const std::vector<Vec3d>& vs,
     
 }
 
-// ---------------------------------------------------------
-///
-/// Destructor.  Deallocates the subdivision scheme object if we created one.
-///
-// ---------------------------------------------------------
-
-SurfTrack::~SurfTrack()
-{
-    if ( should_delete_subdivision_scheme_object )
-    {
-        delete m_subdivision_scheme;
-    }
-}
 
 
 // ---------------------------------------------------------
