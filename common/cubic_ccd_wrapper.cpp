@@ -976,7 +976,10 @@ bool point_triangle_collision(const Vec3d& x0, const Vec3d& xnew0, size_t ,
     Vec3d dx1 = xnew1 - x1;
     Vec3d dx2 = xnew2 - x2;
     Vec3d dx3 = xnew3 - x3;   
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     relative_normal_displacement = dot( normal, dx0 - bary1*dx1 - bary2*dx2 - bary3*dx3 )*t;
+#pragma GCC diagnostic pop
     
     return cubic_result;
 }
@@ -1015,7 +1018,10 @@ bool segment_segment_collision(const Vec3d& x0, const Vec3d& xnew0, size_t ,
     Vec3d dx2 = xnew2 - x2;
     Vec3d dx3 = xnew3 - x3;   
     
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     relative_normal_displacement = dot( normal, bary0*dx0 + (1.0-bary0)*dx1 - bary2*dx2 - (1.0-bary2)*dx3 )*t;
+#pragma GCC diagnostic pop
     
     return cubic_result;
 }
@@ -1035,9 +1041,12 @@ bool segment_triangle_intersection(const Vec3d& x0, size_t ,
                                    bool verbose )
 {
     double bary[5];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
     return check_edge_triangle_intersection( x0, x1, x2, x3, x4, 
                                              bary[0], bary[1], bary[2], bary[3], bary[4],
                                              g_collision_epsilon, degenerate_counts_as_intersection, verbose );
+#pragma GCC diagnostic pop
     
 }
 
