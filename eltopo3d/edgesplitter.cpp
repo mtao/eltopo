@@ -594,7 +594,7 @@ bool EdgeSplitter::split_edge( size_t edge )
 // --------------------------------------------------------
 
 
-bool EdgeSplitter::edge_is_splittable( size_t edge_index )
+bool EdgeSplitter::edge_is_splittable( size_t edge_index ) const
 {
     
     // skip deleted and solid edges

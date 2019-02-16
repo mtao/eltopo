@@ -10,6 +10,7 @@
 
 #include "eltopo.h"
 #include "surftrack.h"
+#include "subdivisionscheme.h"
 
 
 static int to_int( size_t a )
@@ -77,8 +78,7 @@ void el_topo_static_operations( const ElTopoMesh* inputs,
     construction_parameters.m_collision_safety = general_options->m_collision_safety;
     construction_parameters.m_allow_topology_changes = options->m_allow_topology_changes;
     construction_parameters.m_perform_improvement = options->m_perform_improvement;
-    construction_parameters.m_subdivision_scheme = (SubdivisionScheme*) options->m_subdivision_scheme;
-    
+    construction_parameters.m_subdivision_scheme = std::shared_ptr<SubdivisionScheme>((SubdivisionScheme*)options->m_subdivision_scheme);
     
     SurfTrack surface_tracker( vs, ts, masses, construction_parameters ); 
     

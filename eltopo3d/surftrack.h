@@ -18,6 +18,7 @@
 #include "meshmerger.h"
 #include "meshpincher.h"
 #include "meshsmoother.h"
+#include <memory>
 
 // ---------------------------------------------------------
 //  Forwards and typedefs
@@ -85,7 +86,7 @@ struct SurfTrackInitializationParameters
     double m_merge_proximity_epsilon;
     
     /// Type of subdivision to use when collapsing or splitting (butterfly, quadric error minimization, etc.)
-    SubdivisionScheme *m_subdivision_scheme;   
+    std::shared_ptr<SubdivisionScheme> m_subdivision_scheme;   
     
     /// Whether to enforce collision-free surfaces (including during mesh maintenance operations)
     bool m_collision_safety;
@@ -201,7 +202,6 @@ public:
               const SurfTrackInitializationParameters& initial_parameters );
     
     
-    ~SurfTrack();
     
 private:
     
@@ -298,10 +298,8 @@ public:
     double m_max_triangle_angle;
     
     /// Interpolation scheme, determines edge midpoint location
-    SubdivisionScheme *m_subdivision_scheme;
+    std::shared_ptr<SubdivisionScheme> m_subdivision_scheme;
     
-    /// If we allocate our own SubdivisionScheme object, we must delete it in this object's deconstructor.
-    bool should_delete_subdivision_scheme_object;
     
     /// Triangles which are involved in connectivity changes which may introduce degeneracies
     std::vector<size_t> m_dirty_triangles;
