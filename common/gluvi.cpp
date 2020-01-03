@@ -8,8 +8,10 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #include <gl/GL.h>
-#else
+#elif __APPLE__
 #include <OpenGL/OpenGL.h>
+#else
+#include <GL/gl.h>
 #endif
 
 
@@ -968,7 +970,7 @@ namespace Gluvi{
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, winwidth, winheight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
         
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureId, 0);
         
         //
         // Depth/stencil buffer
@@ -1007,7 +1009,7 @@ namespace Gluvi{
         
         glBindTexture(GL_TEXTURE_2D, textureId);
         glEnable(GL_TEXTURE_2D);
-        glGenerateMipmapEXT(GL_TEXTURE_2D);
+        glGenerateMipmap(GL_TEXTURE_2D);
         
         GLint file_width, file_height;
         glGetTexLevelParameteriv( GL_TEXTURE_2D, mipmap_level, GL_TEXTURE_WIDTH, &file_width );

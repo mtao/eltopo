@@ -3,8 +3,8 @@ PROJECT(eltopo)
 
 
 if (NOT CMAKE_BUILD_TYPE)
-  message(STATUS "No build type selected, default to Release")
-  set(CMAKE_BUILD_TYPE "Release")
+    message(STATUS "No build type selected, default to Release")
+    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -Wextra -Wno-reorder -Wno-unknown-pragmas -march=native" )
@@ -74,23 +74,30 @@ SET(ELTOPO_SRC
 
 
 IF(GUI_ENABLED)
-FIND_PACKAGE(OpenGL REQUIRED)
-FIND_PACKAGE(GLUT REQUIRED)
-INCLUDE_DIRECTORIES( ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} )
-ADD_DEFINITIONS(-DUSE_GUI)
+    SET(OpenGL_GL_PREFERENCE GLVND)
+    FIND_PACKAGE(OpenGL REQUIRED)
+    FIND_PACKAGE(GLUT REQUIRED)
+    INCLUDE_DIRECTORIES( ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} )
+    ADD_DEFINITIONS(-DUSE_GUI)
 
-SET(ELTOPO_COMMON_SRC ${ELTOPO_COMMON_SRC} common/gluvi.cpp)
-SET(ELTOPO_SRC 
-    eltopo3d/meshrenderer.cpp 
-    )
+    SET(ELTOPO_COMMON_SRC ${ELTOPO_COMMON_SRC} common/gluvi.cpp)
+    SET(ELTOPO_SRC 
+        ${ELTOPO_SRC}
+        eltopo3d/meshrenderer.cpp 
+        )
 
 ELSE(GUI_ENABLED)
-ADD_DEFINITIONS(-DNO_GUI)
-SET(OPENGL_LIBRARIES )
-SET(GLUT_LIBRARY )
+    ADD_DEFINITIONS(-DNO_GUI)
+    SET(OPENGL_LIBRARIES )
+    SET(GLUT_LIBRARY )
 ENDIF(GUI_ENABLED)
 
-INCLUDE_DIRECTORIES(eltopo3d 
+
+find_package(Threads REQUIRED)
+
+
+ADD_LIBRARY(eltopo_common STATIC ${ELTOPO_COMMON_SRC})
+TARGET_INCLUDE_DIRECTORIES(eltopo_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/common 
     ${CMAKE_CURRENT_SOURCE_DIR}/common/newsparse 
     ${CMAKE_CURRENT_SOURCE_DIR}/common/meshes 
@@ -98,25 +105,29 @@ INCLUDE_DIRECTORIES(eltopo3d
 
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  add_definitions(-DUSE_FORTRAN_BLAS)
-  add_definitions(-D__LITTLE_ENDIAN__)
+    target_compile_definitions(eltopo_common PUBLIC USE_FORTRAN_BLAS)
+    target_compile_definitions(eltopo_common PUBLIC __LITTLE_ENDIAN__)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flax-vector-conversions")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flax-vector-conversions")
 endif()
 
 
-ADD_LIBRARY(eltopo_common STATIC ${ELTOPO_COMMON_SRC})
 ADD_LIBRARY(eltopo STATIC ${ELTOPO_SRC})
-TARGET_LINK_LIBRARIES(eltopo eltopo_common ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+
+TARGET_INCLUDE_DIRECTORIES(eltopo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/eltopo3d)
+TARGET_LINK_LIBRARIES(eltopo eltopo_common ${GLUT_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+if(GUI_ENABLED)
+    TARGET_LINK_LIBRARIES(eltopo OpenGL::GL OpenGL::GLU)
+endif()
 
 
 if(CMAKE_BUILD_TYPE MATCHES Release)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funroll-loops")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funroll-loops")
 endif()
 
 # We need C++11. Put this directive after CGAL's include.
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif()
 
 
@@ -138,5 +149,5 @@ SET(TALPA_SRC
 
 ADD_EXECUTABLE(talpa EXCLUDE_FROM_ALL ${TALPA_SRC})
 TARGET_INCLUDE_DIRECTORIES(talpa PUBLIC talpa talpa/drivers talpa/curlnoise)
-TARGET_LINK_LIBRARIES(talpa eltopo)
+TARGET_LINK_LIBRARIES(talpa eltopo Threads::Threads)
 

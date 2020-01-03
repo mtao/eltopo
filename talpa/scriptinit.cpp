@@ -75,11 +75,11 @@ void ScriptInit::parse_surftrack_parameters( const ParseTree& surftrack_branch )
     
     if ( strcmp( subdivision_scheme.c_str(), "butterfly" ) == 0 )
     {
-        surf_track_params.m_subdivision_scheme = new ButterflyScheme();
+        surf_track_params.m_subdivision_scheme.reset(new ButterflyScheme());
     }
     else
     {
-        surf_track_params.m_subdivision_scheme = new MidpointScheme();
+        surf_track_params.m_subdivision_scheme.reset(new MidpointScheme());
     }
     
     int allow_vertex_movement;
